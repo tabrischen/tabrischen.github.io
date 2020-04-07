@@ -17,13 +17,13 @@
 #introduction {
   background-color: #a864d2;
   height: 100vh;
-  padding: 16% 25px;
+  padding: 10% 25px;
   box-sizing: border-box;
 }
 
 #singapore {
   background-image: url("assets/singapore.jpg");
-  background-color: #fdeaea;
+  background-color: #ffffff;
 }
 
 #animal {
@@ -47,6 +47,10 @@
 }
 
 #music {
+  background-color: #e8c4c9;
+}
+
+#flowart {
   background-color: #d7c4e8;
 }
 
@@ -75,4 +79,8 @@ p {
 img {
   margin-top:20px;
   border: 8px solid #fff;
+}
+
+img.borderless {
+  border: 0px;
 }
