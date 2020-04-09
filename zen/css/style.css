@@ -209,8 +209,15 @@ body {
 	content: "";
 }
 
-#quote{
+#quote {
   margin-top: 30%;
   color: #fff;
   font-size: 22px;
+}
+
+#author {
+  margin-top: 20px;
+  font-size: 17px;
+  float: right;
+  color: #fff;
 }

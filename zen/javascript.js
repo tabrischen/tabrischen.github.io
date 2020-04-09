@@ -1,19 +1,31 @@
 let quotes = [
-"When you realize nothing is lacking, the whole world belongs to you. - Lao Tzu",
-"What the superior man seeks is in himself; what the small man seeks is in others.  - Confucius",
-"To seek is to suffer. To seek nothing is bliss.",
-"I live by letting things happen. - Dogen",
-"Who you are is always right. - Ming-Dao Deng"
-]
-
-//window.addEventListener('load',newQuote);
-
-
+  {
+    content: "When you realize nothing is lacking, the whole world belongs to you",
+    author: " - Lao Tzu"
+  },
+  {
+    content:
+"What the superior man seeks is in himself; what the small man seeks is in others.",
+    author: "- Confucius"
+  },
+  {
+    content: "To seek is to suffer. To seek nothing is bliss.",
+    author: "- unknown "
+  },
+  {
+    content: "I live by letting things happen.",
+    author: "- Dogen"
+  },
+  {
+    content: "Who you are is always right. ",
+    author: " - Ming-Dao Deng"
+  }
+];
 
 function newQuote() {
-  var randomNumber = Math.floor(Math.random() * (quotes.length));
-  var container = document.getElementById('container');
-  document.getElementById('quote').innerHTML = quotes[randomNumber];
+  let randomNumber = Math.floor(Math.random() * (quotes.length));
+  document.getElementById('quote').innerHTML = quotes[randomNumber].content;
+  document.getElementById('author').innerHTML = quotes[randomNumber].author;
   var ripple = document.createElement('div');
   ripple.setAttribute("class","ripple");
   container.appendChild(ripple);
