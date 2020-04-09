@@ -1,15 +1,16 @@
 body {
-  background-color: #f2f2ed;
+  background-image: linear-gradient(to right,#94d1ff,#5fbbe3,#96cecb)
 }
 
-.container {
-  width: 660px;
+#container {
+  width: 720px;
   height: 500px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-image: linear-gradient(to right,#94d1ff,#5fbbe3,#96cecb)
+  text-align: center;
+  border-radius: 20px;
 }
 
 .panel {
@@ -44,35 +45,36 @@ body {
 #darkgreenleaf {
   height: 60px;
   width: 60px;
-  margin-left: 128px;
-  margin-top: 300px;
+  margin-top: 50%;
+  margin-left: 88%;
   background-color: #64a24a;
 }
 
 #leaf1 {
   height: 125px;
   width: 125px;
-  margin-left: 28px;
-  margin-top: 348px;
+  margin-top: 58%;
   background-color: #74b559;
 }
 
 #leaf2 {
   height: 85px;
   width: 85px;
-  margin-left: 28px;
-  margin-top: 248px;
+  margin-left: 6%;
+  margin-top: 47%;
 }
 
 #leaf3 {
   background-color: #74b559;
+  margin-left: 82%;
+  margin-top: 60%;
 }
 
 #lightgreenleaf {
   height: 120px;
   width: 120px;
-  margin-left: 68px;
-  margin-top: 20px;
+  margin-left: 80%;
+  margin-top: 30px;
   background-color: #5ab586;
 }
 
@@ -153,24 +155,25 @@ body {
 }
 
 .ripple {
-  margin-top: 265px;
-  margin-left: 60px;
+  margin-top: 20%;
+  margin-left: 45%;
   height: 80px;
   width: 80px;
   border-radius: 50%;
-  animation: ripples 5s ease-out 2s infinite normal;
+  animation: ripples 5s ease-out 0s 1 normal;
   position: absolute;
+  z-index: -1;
 }
 
 #ripple2 {
-  animation: ripples 5s ease-out 0s infinite normal;
+  animation: ripples 5s ease-out 1s 1 normal;
 }
 
 @keyframes ripples {
   0%    {box-shadow: 0px 0px 2px 3px rgb(247, 254, 255,0.4);}
   100%  {
-    margin-top: 230px;
-    margin-left: 25px;
+    margin-top: 18%;
+    margin-left: 40%;
     height:160px;
     width: 160px;
     box-shadow: 0px 0px 10px 5px transparent;}
@@ -185,9 +188,10 @@ body {
   border-bottom-left-radius: 25px 90px;
   border-bottom-right-radius: 90px;
   position: absolute;
-  margin-left: 86px;
-  margin-top: 278px;
+  margin-left: 50%;
+  margin-top: 55%;
   transform: rotate(30deg);
+  cursor: pointer;
 }
 
 #fishtail {
@@ -203,4 +207,10 @@ body {
 
 .fish::before {
 	content: "";
+}
+
+#quote{
+  margin-top: 30%;
+  color: #fff;
+  font-size: 22px;
 }

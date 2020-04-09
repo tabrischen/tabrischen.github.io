@@ -1,39 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>3 Panel Comic</title>
+    <title>Daily Zen Meditation</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="javascript.js"></script>
   </head>
   <body>
-    <div class="container">
-      <div id="panel1" class="panel">
-        <div id="branch1" class="branch"></div>
-        <div id="branch2" class="branch"></div>
-        <div id="branch3" class="branch"></div>
-        <div id="branch4" class="branch"></div>
-			<div class="leaf" id="leaf1"></div>
-			<div class="leaf" id="leaf2"></div>
-      </div>
-      <div id="panel2" class="panel">
-        <div class="cherry" id="cherry1"></div>
-		  <div class="cherry" id="cherry2"></div>
-					  <div class="cherry" id="cherry3"></div>
-			<div class="cherry" id="cherry4"></div>
-			<div class="cherry" id="cherry5"></div>
-		 <div class="fish">
-          <div id="fishtail"></div>
+    <div id="branch1" class="branch"></div>
+    <div id="branch2" class="branch"></div>
+    <div id="branch3" class="branch"></div>
+    <div id="branch4" class="branch"></div>
+    <div class="leaf" id="leaf1"></div>
+    <div class="leaf" id="leaf2"></div>
+    <div class="leaf" id="lightgreenleaf"></div>
+    <div class="leaf" id="leaf3"></div>
+    <div class="leaf" id="darkgreenleaf"></div>
+    <div class="cherry" id="cherry1"></div>
+    <div class="cherry" id="cherry2"></div>
+    <div class="cherry" id="cherry3"></div>
+    <div class="cherry" id="cherry4"></div>
+    <div class="cherry" id="cherry5"></div>
+    <div id="container">
+		    <div class="fish" onclick="newQuote()">
+        <div id="fishtail"></div>
         </div>
-		<div class="ripple" id="ripple2"></div>
-        <div class="ripple"></div>
+        <div id="quote">
+        <h3>Welcome to the zen meditation pond</h3>
+        Click on the koi to get a zen quote
       </div>
-      <div id="panel3" class="panel">
-			<div class="leaf" id="lightgreenleaf"></div>
-        <div class="leaf" id="leaf3"></div>
-		  <div class="leaf" id="darkgreenleaf"></div>
-      </div>
-      <div id="quote">
-      </div><button onclick="newQuote()">New Quote</button>
     </div>
   </body>
 </html>
