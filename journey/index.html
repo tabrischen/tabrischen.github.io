@@ -4,6 +4,13 @@
     <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
     <title>Journey</title>
     <style>
+
+    #music {
+      z-index: 200;
+      position:absolute;
+      display:none;
+    }
+
       #start-bttn {
         position: absolute;
         z-index: 20;
@@ -16,7 +23,6 @@
         color: #fff;
         border: 2px solid #fff;
         cursor: pointer;
-        display: none;
       }
       #splash {
   position: absolute;
@@ -53,21 +59,18 @@
   border: 0.25rem solid rgba(255, 255, 255, 0.2);
   border-top-color: white;
   animation: spin 1s infinite linear;
+
+
 }
     </style>
   </head>
   <body>
+    <audio controls id="music" src="../../audio/journey.mp3" preload="auto">Track</audio>
     <div id="splash">
       <div class="loading"></div>
     </div>
     <a-scene>
       <a-asset>
-        <audio
-          id="music"
-          loop="true"
-          src="../../audio/journey.mp3"
-          preload="auto"
-        ></audio>
         <a-asset-item id='flying-car_body-obj' src='../models/toy_car.obj'
         ></a-asset-item>
         <a-asset-item id='flying-car_body-mtl' src='../models/toy_car.mtl'
@@ -82,7 +85,6 @@
       <a-entity
         id="car-group"
         position = "0 0 60"
-        sound="src: #music; loop:true; volume:0.4"
       >
           <a-entity
           obj-model="obj: #flying-car_body-obj; mtl: #flying-car_body-mtl"
@@ -106,14 +108,14 @@
 
     <button id="start-bttn">LET'S GO</button>
     <script>
-    var sceneEl = document.querySelector('a-scene');
+    const sceneEl = document.querySelector('a-scene');
     const playBttn = document.getElementById('start-bttn');
+    const music = document.getElementById('music');
+    //
 
-    var splash = document.querySelector('#splash');
+    const splash = document.querySelector('#splash');
 
-    var audio = sceneEl.querySelector('#music');
-
-    audio.addEventListener('loaded', ()=> {
+    window.addEventListener('DOMContentLoaded', ()=> {
         splash.style.display = 'none';
         playBttn.style.display= 'block';
     });
@@ -124,9 +126,9 @@
 
 
       playBttn.addEventListener('click', ()=>{
-        let entity = document.querySelector('#car-group');
-        entity.components.sound.playSound();
         playBttn.style.display = "none";
+        music.play();
+        music.style.display = 'block';
         interval = setInterval(() => {
           let carPosition = car.object3D.position.z;
           car.object3D.position.z -= 0.01;
