@@ -6,8 +6,17 @@
     <style>
 
     #music {
-      z-index: 200;
+      width: 300px;
+      height: 25px;
+      margin-top: 15px;
+    }
+
+    #player {
       position:absolute;
+      z-index: 20;
+      top: 80px;
+      left: 35vw;
+      color: #fff;
       display:none;
     }
 
@@ -65,7 +74,11 @@
     </style>
   </head>
   <body>
-    <audio controls id="music" src="../../audio/journey.mp3" preload="auto">Track</audio>
+    <div id="player">
+      Playing: The Journey - Aevion ( Oliver Heldens Edit )
+      <br />
+      <audio controls loop id="music" src="../../audio/journey.mp3" preload="auto"></audio>
+    </div>
     <div id="splash">
       <div class="loading"></div>
     </div>
@@ -111,9 +124,8 @@
     const sceneEl = document.querySelector('a-scene');
     const playBttn = document.getElementById('start-bttn');
     const music = document.getElementById('music');
-    //
-
     const splash = document.querySelector('#splash');
+    const player = document.getElementById('player');
 
     window.addEventListener('DOMContentLoaded', ()=> {
         splash.style.display = 'none';
@@ -124,11 +136,10 @@
       const car = sceneEl.querySelector('#car-group');
       let interval;
 
-
       playBttn.addEventListener('click', ()=>{
         playBttn.style.display = "none";
         music.play();
-        music.style.display = 'block';
+        player.style.display = 'block';
         interval = setInterval(() => {
           let carPosition = car.object3D.position.z;
           car.object3D.position.z -= 0.01;
