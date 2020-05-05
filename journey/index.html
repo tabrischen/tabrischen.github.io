@@ -16,11 +16,51 @@
         color: #fff;
         border: 2px solid #fff;
         cursor: pointer;
+        display: none;
       }
+      #splash {
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  width: 200px;
+  height: 200px;
+
+  margin: auto;
+  z-index: 20;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 0.25rem solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  animation: spin 1s infinite linear;
+}
     </style>
   </head>
   <body>
-
+    <div id="splash">
+      <div class="loading"></div>
+      Loading...
+    </div>
     <a-scene>
       <a-asset>
         <audio
@@ -65,15 +105,21 @@
     </a-scene>
 
     <button id="start-bttn">LET'S GO</button>
-    <button id="pause-bttn">Pause</button>
     <script>
+    var sceneEl = document.querySelector('a-scene');
+    const playBttn = document.getElementById('start-bttn');
 
-      sceneEl = document.querySelector('a-scene');
+    var splash = document.querySelector('#splash');
+    sceneEl.addEventListener('loaded', ()=> {
+        splash.style.display = 'none';
+        playBttn.style.display= 'block';
+    });
+
+
       const car = sceneEl.querySelector('#car-group');
       let interval;
-      console.log(car);
 
-      const playBttn = document.getElementById('start-bttn');
+
       playBttn.addEventListener('click', ()=>{
         let entity = document.querySelector('#car-group');
         entity.components.sound.playSound();
