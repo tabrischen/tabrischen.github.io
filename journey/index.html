@@ -129,10 +129,13 @@
     const player = document.getElementById('player');
     const audio = document.getElementById('music');
 
+    sceneEl.addEventListener('loaded', () => {
     audio.addEventListener('canplay', ()=> {
         splash.style.display = 'none';
         playBttn.style.display= 'block';
     });
+  });
+
 
 
       const car = sceneEl.querySelector('#car-group');
