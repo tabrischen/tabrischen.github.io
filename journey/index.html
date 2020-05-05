@@ -59,9 +59,6 @@
   <body>
     <div id="splash">
       <div class="loading"></div>
-      Welcome to Journey, a web experiment by <a href="https://twitter.com/tabrischen">@tabrischen</a>
-
-      Track: The Journey - Aevion ( Oliver Heldens extended edit)
     </div>
     <a-scene>
       <a-asset>
@@ -113,7 +110,10 @@
     const playBttn = document.getElementById('start-bttn');
 
     var splash = document.querySelector('#splash');
-    sceneEl.addEventListener('loaded', ()=> {
+
+    var audio = sceneEl.querySelector('#music');
+
+    audio.addEventListener('loaded', ()=> {
         splash.style.display = 'none';
         playBttn.style.display= 'block';
     });
