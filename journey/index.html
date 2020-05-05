@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+    <title>Journey</title>
+    <style>
+      #start-bttn {
+        position: absolute;
+        z-index: 20;
+        top: 50vh;
+        left: 45vw;
+        width: 100px;
+        height: 60px;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        color: #fff;
+        border: 2px solid #fff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+
+    <a-scene>
+      <a-asset>
+        <audio
+          id="music"
+          loop="true"
+          src="../../audio/journey.mp3"
+        ></audio>
+        <a-asset-item id='flying-car_body-obj' src='../models/toy_car.obj'
+        ></a-asset-item>
+        <a-asset-item id='flying-car_body-mtl' src='../models/toy_car.mtl'
+        ></a-asset-item>
+        <a-asset-item id='dog' src='../models/dachshund.obj'
+        ></a-asset-item>
+        <a-asset-item id='dog' src='../models/dachshund.mtl'
+        ></a-asset-item>
+
+      </a-asset>
+      <a-entity environment="preset: goaland"></a-entity>
+      <a-entity
+        id="car-group"
+        position = "0 0 60"
+        sound="src: #music; loop:true; volume:0.4"
+      >
+          <a-entity
+          obj-model="obj: #flying-car_body-obj; mtl: #flying-car_body-mtl"
+          shadow="cast: true"
+          scale="0.007 0.007 0.007"
+          position="-1.5 0 -1"
+          rotation="0 180 0"></a-entity>
+
+          <a-entity camera look-controls wasd-controls position="-0.5 2 3"></a-entity>
+
+          <a-entity
+            obj-model="obj: #dog; mtl: #dog"
+            position="0 0 15"
+            rotation= "0 180 0"
+          >
+
+        </a-entity>
+
+      </a-entity>
+    </a-scene>
+
+    <button id="start-bttn">LET'S GO</button>
+    <button id="pause-bttn">Pause</button>
+    <script>
+
+      sceneEl = document.querySelector('a-scene');
+      const car = sceneEl.querySelector('#car-group');
+      let interval;
+      console.log(car);
+
+      const playBttn = document.getElementById('start-bttn');
+      playBttn.addEventListener('click', ()=>{
+        let entity = document.querySelector('#car-group');
+        entity.components.sound.playSound();
+        playBttn.style.display = "none";
+        interval = setInterval(() => {
+          let carPosition = car.object3D.position.z;
+          car.object3D.position.z -= 0.01;
+          if (carPosition < -40) {
+            car.object3D.position.z += 100;
+          }
+
+
+        },1)
+
+      });
+    </script>
+  </body>
+</html>
