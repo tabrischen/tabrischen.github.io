@@ -1,59 +1,186 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <title>Tabris' Site</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Esteban&display=swap" rel="stylesheet">
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <title>Journey</title>
+    <style>
+
+    * {
+      font-family: 'Quicksand', arial;
+    }
+
+    #music {
+      width: 300px;
+      height: 25px;
+      margin-top: 15px;
+    }
+
+    #player {
+      position:absolute;
+      z-index: 20;
+      top: 10px;
+      left: 10px;
+      color: #fff;
+      display:none;
+      padding: 20px;
+      background-color: rgb(5, 5, 5, 0.3);
+    }
+
+    #loading-text {
+      position: absolute;
+      z-index: 20;
+      top: 30vh;
+      left: 43vw;
+      color: #fff;
+      text-align: center;
+    }
+      #start-bttn {
+        position: absolute;
+        z-index: 20;
+        top: 50vh;
+        left: 45vw;
+        width: 100px;
+        height: 60px;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        color: #fff;
+        border: 2px solid #fff;
+        cursor: pointer;
+        display: none;
+      }
+      #splash {
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  width: 200px;
+  height: 200px;
+
+  margin: auto;
+  z-index: 20;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 0.25rem solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  animation: spin 1s infinite linear;
+
+
+}
+    </style>
   </head>
   <body>
-    <div id="container">
-      <div class="panel" id="introduction">
-        <h1>7 Fun Facts about Tabris</h1>
-        <img src="assets/emoji.png" width="150px" class="borderless">
-      </div>
-      <div class="panel" id="singapore">
-        <h2>1 .</h2>
-        <p>Tabris is from Singapore, a sunny island near the equator in south east Aisa and home of the <a href="https://www.imdb.com/title/tt3104988/" rel="nofollow" target="_blank">Crazy Rich Asians</a>. Netflix even made its own reality series called <a href="https://www.netflix.com/title/80245262" rel="nofollow" target="_blank">Singapore Social</a>.</p>
-        <p>But Tabris is not rich, and only slightly crazy.</p>
-        <img src="assets/singapore.jpg" width="700px;">
-      </div>
-      <div class="panel" id="animal">
-        <h2>2 .</h2>
-        <p>Tabris is a huge animal lover. She currently doesn't own any pets of her own, so she enjoys dogsiting for fun on <a href="https://www.rover.com/members/tabris-c-loving-home-away-from-home/" rel="nofollow" target="_blank">Rover</a> playing with other people's dogs and cats.</p>
-        <p>She has helped looked after many breeds of dogs, her favorite dog ever is a yellow lab called Brodie.
-        <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Google Photos took random photos of my favorite dog I dog sat throughout the year and made a cute little movie aptly titled Doggie Movie 🐕 <a href="https://t.co/vj8xDvnc1h">pic.twitter.com/vj8xDvnc1h</a></p>&mdash; Tabris (@tabrischen) <a href="https://twitter.com/tabrischen/status/1081278522545496065?ref_src=twsrc%5Etfw">January 4, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      </div>
-      <div class="panel" id="everest">
-        <h2>3 .</h2>
-        <p>Tabris doesn't go to the gym but enjoys long walks in nature. </p>
-        <p>She once spent a month in Nepal, trekking Annapurna and Everest basecamp back to back.</p>
-        <img src="assets/annapurna.jpg" width="350">
-        <img src="assets/everest.jpg" width="350px">
-      </div>
-      <div class="panel" id="birth">
-        <h2>4 .</h2>
-        <p>Tabris was originally born in Chengdu, China and migrated to Singapore when she was 7. </p>
-        <p>She is very fond of her hometown and loves visiting for the giant pandas and spicy SzeChuan hotpot.</p>
-        <img src="assets/chengdu.gif" width="500px">
-      </div>
-      <div class="panel" id="education">
-      <h2>5 .</h2>
-      <p>Tabris went to college in Australia, studying finance and business informatics at University of Melbourne. </p>
-      <p>After graduation, she lived in Sydney for 3 years working as a product strategist for Google Australia before moving to the bay area.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/iLDJ1nAb6FQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-      <div class="panel" id="music">
-        <h2>6 .</h2>
-        <p>Tabris enjoys many genres of music from indie, pop, classical, world music to electronic dance music (EDM - techhouse and bass).</p>
-        <p>She started learning violin as an adult and enjoys playing Bach and Brazilian choro on it. </p>
-        <iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fvibomusicschool%2Fvideos%2F1677834508914662%2F&show_text=0&width=560" width="720" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>
-      </div>
-      <div class="panel" id="flowart">
-        <h2>7 .</h2>
-      <p>Tabris is interested in movement and flow arts and regularly practises dancing, yoga, poi spinning and capoeira. </p>
-      <p>She is currently learning how to hoop. </p>
-      <img src="assets/flow.jpg" width="600px">
-      </div>
+    <div id="player">
+      Playing: The Journey - Aevion ( Oliver Heldens Edit )
+      <br />
+      <audio controls loop id="music" src="../../audio/journey.mp3" preload="auto"></audio>
     </div>
+    <div id="splash">
+      <div class="loading"></div>
+    </div>
+    <div id="loading-text">
+      Welcome to Journey, a web experiment by <a href="https://twitter.com/tabrischen">@tabrischen</a>
+
+    </div>
+    <a-scene>
+      <a-asset>
+        <a-asset-item id='flying-car_body-obj' src='../models/toy_car.obj'
+        ></a-asset-item>
+        <a-asset-item id='flying-car_body-mtl' src='../models/toy_car.mtl'
+        ></a-asset-item>
+        <a-asset-item id='dog' src='../models/dachshund.obj'
+        ></a-asset-item>
+        <a-asset-item id='dog-mtl' src='../models/dachshund.mtl'
+        ></a-asset-item>
+
+      </a-asset>
+      <a-entity
+        id='goa'
+        environment="preset: goaland; dressingAmount: 300; dressingColor: #a122a9; dressingScale:7; horizonColor:#81298f"
+        ></a-entity>
+
+      <a-entity
+        id="car-group"
+        position = "0 0 60"
+      >
+          <a-entity
+          obj-model="obj: #flying-car_body-obj; mtl: #flying-car_body-mtl"
+          shadow="cast: true"
+          scale="0.007 0.007 0.007"
+          position="-1.5 0 -1"
+          rotation="0 180 0"></a-entity>
+
+          <a-entity camera look-controls wasd-controls position="-0.5 2 3"></a-entity>
+
+          <a-entity
+            obj-model="obj: #dog; mtl: #dog-mtl"
+            position="0 0 15"
+            rotation= "0 180 0"
+          >
+
+        </a-entity>
+
+      </a-entity>
+    </a-scene>
+
+    <button id="start-bttn">LET'S GO</button>
+    <script>
+    const sceneEl = document.querySelector('a-scene');
+    const playBttn = document.getElementById('start-bttn');
+    const music = document.getElementById('music');
+    const splash = document.querySelector('#splash');
+    const player = document.getElementById('player');
+    const audio = document.getElementById('music');
+    const goa = sceneEl.querySelector('#goa');
+    const loadingText = document.getElementById('loading-text')
+
+    sceneEl.addEventListener('loaded', () => {
+    audio.addEventListener('canplay', ()=> {
+        splash.style.display = 'none';
+        playBttn.style.display= 'block';
+    });
+  });
+
+
+
+      const car = sceneEl.querySelector('#car-group');
+      let interval;
+
+
+      playBttn.addEventListener('click', ()=>{
+        playBttn.style.display = "none";
+        music.play();
+        player.style.display = 'block';
+        loadingText.style.display='none';
+        interval = setInterval(() => {
+          let carPosition = car.object3D.position.z;
+          car.object3D.position.z -= 0.01;
+          if (carPosition < -30) {
+            car.object3D.position.z += 100;
+          }
+        },1)
+
+      });
+    </script>
   </body>
 </html>
