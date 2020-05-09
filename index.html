@@ -116,10 +116,6 @@
         ></a-asset-item>
         <a-asset-item id='flying-car_body-mtl' src='../models/toy_car.mtl'
         ></a-asset-item>
-        <a-asset-item id='dog' src='../models/dachshund.obj'
-        ></a-asset-item>
-        <a-asset-item id='dog-mtl' src='../models/dachshund.mtl'
-        ></a-asset-item>
 
       </a-asset>
       <a-entity
@@ -140,12 +136,6 @@
 
           <a-entity camera look-controls wasd-controls position="-0.5 2 3"></a-entity>
 
-          <a-entity
-            obj-model="obj: #dog; mtl: #dog-mtl"
-            position="0 0 15"
-            rotation= "0 180 0"
-          >
-
         </a-entity>
 
       </a-entity>
@@ -161,6 +151,10 @@
     const audio = document.getElementById('music');
     const goa = sceneEl.querySelector('#goa');
     const loadingText = document.getElementById('loading-text')
+    goa.getAttribute('environment');
+
+
+
 
     sceneEl.addEventListener('loaded', () => {
     audio.addEventListener('canplay', ()=> {
@@ -179,13 +173,19 @@
         playBttn.style.display = "none";
         music.play();
         player.style.display = 'block';
-        loadingText.style.display='none';
+        loadingText.style.display='none'
         interval = setInterval(() => {
           let carPosition = car.object3D.position.z;
           car.object3D.position.z -= 0.01;
           if (carPosition < -30) {
             car.object3D.position.z += 100;
           }
+          let color = 'rgba(212,' + Math.abs(Math.round(carPosition)) + ',150,1)'
+          // console.log(color)
+          goa.setAttribute('environment',{
+            // horizonColor: '#ffffff',
+            dressingColor: color
+          });
         },1)
 
       });
