@@ -2,7 +2,8 @@
   <head>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+    "https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
     <title>Journey</title>
     <style>
 
@@ -57,6 +58,14 @@
         background-color: #fff;
         color: #333;
       }
+
+      #color-bttn {
+        position: absolute;
+        z-index: 20;
+        top: 50vh;
+        left: 100px;
+      }
+
       #splash {
   position: absolute;
 
@@ -142,6 +151,8 @@
     </a-scene>
 
     <button id="start-bttn">LET'S GO</button>
+    <button id="color-bttn">Change Color</button>
+
     <script>
     const sceneEl = document.querySelector('a-scene');
     const playBttn = document.getElementById('start-bttn');
@@ -150,8 +161,10 @@
     const player = document.getElementById('player');
     const audio = document.getElementById('music');
     const goa = sceneEl.querySelector('#goa');
-    const loadingText = document.getElementById('loading-text')
-    goa.getAttribute('environment');
+    const loadingText = document.getElementById('loading-text');
+    const colorBttn = document.getElementById('color-bttn');
+
+
 
 
 
@@ -163,10 +176,25 @@
     });
   });
 
-
+    colorBttn.addEventListener('click', ()=>{
+      let color=chroma.random();
+      let colorHex=chroma(color).name();
+      let color2 = chroma.random();
+      let colorHex2 = chroma.random().name();
+      goa.setAttribute('environment',{
+        dressingColor: colorHex,
+        groundColor: colorHex2
+      });
+    })
 
       const car = sceneEl.querySelector('#car-group');
       let interval;
+
+
+
+
+
+
 
 
       playBttn.addEventListener('click', ()=>{
@@ -180,12 +208,6 @@
           if (carPosition < -30) {
             car.object3D.position.z += 100;
           }
-          let color = 'rgba(212,' + Math.abs(Math.round(carPosition)) + ',150,1)'
-          // console.log(color)
-          goa.setAttribute('environment',{
-            // horizonColor: '#ffffff',
-            dressingColor: color
-          });
         },1)
 
       });
