@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creative Technologist Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * {
@@ -218,44 +221,6 @@
         .logo:hover {
             transform: scale(1.05);
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            position: relative;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.8);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-link:hover::after {
-            width: 60%;
         }
 
         /* Mobile menu toggle */
@@ -487,12 +452,13 @@
         }
 
         .glitch-text {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 900;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 400;
             margin-bottom: 1rem;
             color: #ffffff;
             text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
-            letter-spacing: -0.02em;
+            letter-spacing: 0.02em;
             animation: glow 3s ease-in-out infinite;
         }
 
@@ -501,10 +467,19 @@
             50% { text-shadow: 0 0 60px rgba(255, 255, 255, 0.8), 0 0 100px rgba(255, 255, 255, 0.5); }
         }
 
-        .subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+        .role-title {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
             margin-bottom: 2rem;
-            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
             font-weight: 300;
             text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
@@ -582,12 +557,14 @@
         }
 
         .section-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: clamp(2.5rem, 5vw, 4rem);
             text-align: center;
             margin-bottom: 1rem;
-            font-weight: 800;
+            font-weight: 500;
             color: #ffffff;
             text-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.02em;
         }
 
         .section-subtitle {
@@ -723,20 +700,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ffa177 100%);
             color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            animation: rotate-diamond 10s linear infinite;
+            font-size: 3rem;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+            animation: rotate-star 20s linear infinite;
         }
 
-        @keyframes rotate-diamond {
+        @keyframes rotate-star {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
@@ -762,7 +732,7 @@
         }
 
         .experiments .project-content h3 {
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
 
         .experiments .project-description {
@@ -781,11 +751,13 @@
         }
 
         .project-content h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 2.5rem;
             margin-bottom: 1rem;
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 500;
             text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.01em;
         }
 
         .project-tag {
@@ -879,18 +851,25 @@
 
         /* Scroll indicator */
         .scroll-indicator {
-            position: absolute;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
+            display: block;
+            margin: 6rem auto 0;
+            width: 30px;
+            height: 30px;
             animation: bounce 2s infinite;
-            z-index: 3;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-10px); }
-            60% { transform: translateX(-50%) translateY(-5px); }
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
 
         .scroll-indicator svg {
@@ -898,6 +877,51 @@
             height: 30px;
             opacity: 0.8;
             filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Hero divider - special styling */
+        .hero-divider {
+            margin-top: 5rem;
+            margin-bottom: 6rem;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 8rem;
+        }
+
+        .footer-content {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+
+        .footer-content a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .footer-content a:hover {
+            color: #f093fb;
+            text-shadow: 0 0 20px rgba(240, 147, 251, 0.5);
+        }
+
+        .heart {
+            color: #f5576c;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            10%, 30% { transform: scale(1.1); }
+            20%, 40% { transform: scale(1); }
         }
 
         /* Header Navigation */
@@ -930,11 +954,17 @@
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.8rem;
+            font-weight: 500;
             color: #ffffff;
             text-decoration: none;
-            letter-spacing: -0.02em;
+            letter-spacing: 0.02em;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
         }
 
         .nav-links {
@@ -943,7 +973,7 @@
             list-style: none;
         }
 
-        .nav-links a {
+        .nav-link {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             font-weight: 500;
@@ -952,22 +982,22 @@
             position: relative;
         }
 
-        .nav-links a:hover {
+        .nav-link:hover {
             color: #ffffff;
         }
 
-        .nav-links a::after {
+        .nav-link::after {
             content: '';
             position: absolute;
             bottom: -5px;
             left: 0;
             width: 0;
             height: 2px;
-            background: #ffffff;
+            background: linear-gradient(90deg, #f093fb, #764ba2, #667eea);
             transition: width 0.3s ease;
         }
 
-        .nav-links a:hover::after {
+        .nav-link:hover::after {
             width: 100%;
         }
 
@@ -1011,10 +1041,10 @@
     <!-- Header Navigation -->
     <header class="header">
         <nav class="nav-container">
-            <a href="#" class="logo">CT</a>
+            <a href="#" class="logo">Tabris Chen</a>
             <div class="nav-links">
                 <a href="#" class="nav-link">Home</a>
-                <a href="#projects" class="nav-link">Major Projects</a>
+                <a href="#projects" class="nav-link">Ongoing Projects</a>
                 <a href="#experiments" class="nav-link">Experiments</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link">Contact</a>
@@ -1030,7 +1060,8 @@
         <canvas id="canvas-3d"></canvas>
         <div class="container">
             <div class="hero-content">
-                <h1 class="glitch-text">Creative Technologist</h1>
+                <h1 class="glitch-text">Tabris Chen</h1>
+                <p class="role-title">Creative Technologist & System Designer</p>
                 <p class="subtitle">
                     Building <span class="highlight">experimental interfaces</span> and 
                     <span class="highlight">speculative futures</span> at the intersection of 
@@ -1042,20 +1073,25 @@
                     <a href="#contact" class="btn btn-secondary">Get in Touch</a>
                     <a href="#about" class="btn btn-tertiary">About Me</a>
                 </div>
-            </div>
-            
-            <div class="scroll-indicator">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                </svg>
+
+                <a href="#projects" class="scroll-indicator">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Major Projects Section -->
+    <!-- Hero Divider -->
+    <div class="container">
+        <div class="section-divider hero-divider"></div>
+    </div>
+
+    <!-- Ongoing Projects Section -->
     <section class="projects" id="projects">
         <div class="container">
-            <h2 class="section-title">Major Projects</h2>
+            <h2 class="section-title">Ongoing Projects</h2>
             <p class="section-subtitle">Long-term explorations in autonomy, consciousness, and human-centered design</p>
             
             <div class="project-grid">
@@ -1123,13 +1159,12 @@
                     </div>
                     <div class="project-content">
                         <span class="project-tag">Interactive • Therapeutic</span>
-                        <h3>Notes Pop</h3>
+                        <h3>Pop Your Fear</h3>
                         <p class="project-description">
-                            Digital bubble wrap for the soul. Each limiting belief, fear, and self-doubt 
-                            appears as a bubble waiting to be popped. A playful, cathartic experience 
-                            that transforms anxiety into satisfying micro-interactions. Built as a Claude artifact.
+                            A playful, cathartic experience that helps you squash whatever that's holding 
+                            you back from being your best self!
                         </p>
-                        <a href="#" class="project-link">
+                        <a href="https://tabrischen.github.io/lab/release.html" target="_blank" rel="noopener noreferrer" class="project-link">
                             Start popping
                             <span class="arrow">→</span>
                         </a>
@@ -1150,7 +1185,7 @@
                             creates harmony and every turn reveals new sonic textures. An exploration of 
                             synesthesia in digital space.
                         </p>
-                        <a href="#" class="project-link">
+                        <a href="https://tabrischen.github.io/journey/index.html" target="_blank" rel="noopener noreferrer" class="project-link">
                             Begin journey
                             <span class="arrow">→</span>
                         </a>
@@ -1357,5 +1392,12 @@
             observer.observe(card);
         });
     </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            Made with <span class="heart">♥</span> by <a href="https://x.com/tabrischen" target="_blank" rel="noopener noreferrer">Tabris Chen</a> © 2026
+        </div>
+    </footer>
 </body>
 </html>
