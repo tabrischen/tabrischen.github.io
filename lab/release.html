@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release & Rise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --earth-dark: #1a1511;
+            --earth-medium: #2d2416;
+            --earth-light: #4a3f2f;
+            --grass: #3d5a3d;
+            --sky-night: #0f1419;
+            --sky-dusk: #2a3f5f;
+            --petal-pink: #ffb7d5;
+            --petal-violet: #c8a2e0;
+            --petal-gold: #ffd97d;
+            --petal-coral: #ff9a8b;
+            --petal-blue: #89cff0;
+            --stem-green: #4a7c59;
+        }
+
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: radial-gradient(ellipse at center, var(--sky-dusk) 0%, var(--sky-night) 40%, #0a0e14 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: #f5f1e8;
+        }
+
+        /* Floating particles */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent);
+            border-radius: 50%;
+            animation: floatParticle 20s infinite ease-in-out;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0.8;
+            }
+        }
+
+        /* Starry background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 4s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 3rem 1rem 1rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 300;
+            color: #f5f1e8;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 20px rgba(255, 215, 125, 0.3);
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: #d4c5a9;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+
+        /* Note Input Section */
+        .write-section {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 500px;
+            width: 90%;
+            padding: 2.5rem;
+            background: rgba(42, 63, 95, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+
+        .write-section:not(.hidden) {
+            animation: fadeInUp 1s ease-out both;
+        }
+
+        .write-section.hidden {
+            display: none;
+        }
+
+        .write-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            color: #ffd97d;
+            text-align: center;
+        }
+
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #f5f1e8;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* Floating action button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--petal-gold) 0%, var(--petal-coral) 100%);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 215, 125, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--earth-dark);
+            transition: all 0.3s ease;
+            z-index: 100;
+            animation: fabAppear 0.5s ease-out;
+        }
+
+        .fab.show {
+            display: flex;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(255, 215, 125, 0.6);
+        }
+
+        @keyframes fabAppear {
+            from {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #f5f1e8;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--petal-gold);
+            box-shadow: 0 0 20px rgba(255, 215, 125, 0.2);
+        }
+
+        textarea::placeholder {
+            color: #a89d85;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem 2rem;
+            margin-top: 1rem;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--petal-gold) 0%, var(--petal-coral) 100%);
+            color: var(--earth-dark);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 215, 125, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Garden */
+        .garden {
+            position: relative;
+            max-width: 1400px;
+            margin: 1rem auto;
+            min-height: 400px;
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        /* Flower - now an ethereal light orb */
+        .flower {
+            position: absolute;
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            animation: growFlower 1.5s ease-out, floatDrift 20s infinite ease-in-out, flicker 4s infinite ease-in-out;
+            transition: all 0.4s ease;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            z-index: 10;
+        }
+
+        .flower:hover {
+            transform: scale(1.3);
+            z-index: 40;
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            25% {
+                opacity: 0.85;
+            }
+            50% {
+                opacity: 0.95;
+            }
+            75% {
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes growFlower {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes floatDrift {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            10% {
+                transform: translateY(-90px) translateX(80px);
+            }
+            20% {
+                transform: translateY(-140px) translateX(40px);
+            }
+            30% {
+                transform: translateY(-100px) translateX(-70px);
+            }
+            40% {
+                transform: translateY(-160px) translateX(-30px);
+            }
+            50% {
+                transform: translateY(-120px) translateX(90px);
+            }
+            60% {
+                transform: translateY(-80px) translateX(-80px);
+            }
+            70% {
+                transform: translateY(-150px) translateX(50px);
+            }
+            80% {
+                transform: translateY(-60px) translateX(-50px);
+            }
+            90% {
+                transform: translateY(-110px) translateX(60px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        /* Remove stem - flowers float freely */
+        .stem {
+            display: none;
+        }
+
+        /* Ethereal orb container */
+        .petals {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Outer glow ring */
+        .outer-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, transparent 30%, var(--glow-color) 70%, transparent 100%);
+            opacity: 0.4;
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.5;
+            }
+        }
+
+        /* Core light orb */
+        .core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, 
+                rgba(255, 255, 255, 0.9) 0%,
+                var(--core-color) 50%,
+                var(--glow-color) 100%);
+            box-shadow: 
+                0 0 20px var(--glow-color),
+                inset 0 0 15px rgba(255, 255, 255, 0.3);
+            animation: coreShimmer 3s infinite ease-in-out;
+        }
+
+        @keyframes coreShimmer {
+            0%, 100% {
+                box-shadow: 
+                    0 0 20px var(--glow-color),
+                    inset 0 0 15px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 0 30px var(--glow-color),
+                    inset 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* Note tooltip */
+        .note-tooltip {
+            position: fixed;
+            max-width: 300px;
+            padding: 1.5rem;
+            background: rgba(26, 21, 17, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 125, 0.3);
+            color: #f5f1e8;
+            font-size: 1rem;
+            line-height: 1.6;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .note-tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .note-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid rgba(26, 21, 17, 0.95);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            color: #d4c5a9;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .write-section {
+                margin: 2rem 1rem;
+                padding: 2rem 1.5rem;
+            }
+
+            .garden {
+                padding: 1rem;
+            }
+        }
+
+        /* Transformation animation */
+        .write-section.transforming {
+            animation: sectionTransform 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes sectionTransform {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            30% {
+                transform: translate(-50%, -50%) scale(1.05);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(0.95);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, 100vh) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* Message transformation particle */
+        .message-particle {
+            position: fixed;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            color: var(--earth-dark);
+            font-size: 1rem;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.5);
+            z-index: 9999;
+            pointer-events: none;
+            white-space: nowrap;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .message-particle.animate {
+            animation: messageFloat 2s ease-out forwards;
+        }
+
+        @keyframes messageFloat {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(0.8) translateY(-30vh);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-60vh);
+            }
+        }
+
+        /* Birth animation for new orb */
+        .flower.being-born {
+            animation: orbBirth 2s ease-out forwards !important;
+        }
+
+        @keyframes orbBirth {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+                filter: brightness(5) drop-shadow(0 0 50px rgba(255, 255, 255, 0.9));
+            }
+            40% {
+                transform: scale(0.5);
+                opacity: 1;
+                filter: brightness(3) drop-shadow(0 0 40px rgba(255, 255, 255, 0.8));
+            }
+            70% {
+                transform: scale(1.2);
+                filter: brightness(1.5) drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+            }
+        }
+
+        /* Burst animation for clicked orbs */
+        .flower.bursting {
+            animation: orbBurst 0.6s ease-out forwards !important;
+            pointer-events: none;
+        }
+
+        @keyframes orbBurst {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            30% {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+            60% {
+                transform: scale(1.6);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Burst particles */
+        .burst-particle {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            animation: particleBurst 0.8s ease-out forwards;
+        }
+
+        @keyframes particleBurst {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Ripple effect */
+        .burst-ripple {
+            position: fixed;
+            border: 2px solid;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+            animation: rippleExpand 0.6s ease-out forwards;
+        }
+
+        @keyframes rippleExpand {
+            0% {
+                width: 60px;
+                height: 60px;
+                opacity: 0.8;
+            }
+            100% {
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Floating particles -->
+    <div class="floating-particles" id="particles"></div>
+
+    <!-- Ground -->
+    <div class="ground"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <header>
+            <h1>Release & Rise</h1>
+            <p class="subtitle">Pop your fears, let them dissolve into light</p>
+        </header>
+
+        <div class="write-section">
+            <button class="close-btn" onclick="hideWriteSection()">×</button>
+            <h2>Release Your Fear</h2>
+            <textarea id="noteInput" placeholder="What is holding you back from realizing your highest self today?"></textarea>
+            <button onclick="plantNote()">Release into the Sky</button>
+        </div>
+
+        <div class="garden" id="garden">
+            <div class="loading" id="loading">Gathering your fears...</div>
+        </div>
+    </div>
+
+    <!-- Tooltip for viewing notes -->
+    <div class="note-tooltip" id="tooltip"></div>
+
+    <!-- Floating action button -->
+    <button class="fab" id="fab" onclick="showWriteSection()">✨</button>
+
+    <script>
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 60 + '%';
+            star.style.animationDelay = Math.random() * 4 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.bottom = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // 7 ethereal colors corresponding to musical notes C D E F G A B
+        const flowerColors = [
+            { glow: 'rgba(255, 100, 100, 0.8)', core: 'rgba(255, 70, 70, 0.9)', note: 'C' },   // Red - C
+            { glow: 'rgba(255, 180, 100, 0.8)', core: 'rgba(255, 150, 70, 0.9)', note: 'D' },  // Orange - D
+            { glow: 'rgba(255, 230, 100, 0.8)', core: 'rgba(255, 210, 70, 0.9)', note: 'E' },  // Yellow - E
+            { glow: 'rgba(100, 255, 150, 0.8)', core: 'rgba(70, 255, 120, 0.9)', note: 'F' },  // Green - F
+            { glow: 'rgba(100, 200, 255, 0.8)', core: 'rgba(70, 180, 255, 0.9)', note: 'G' },  // Blue - G
+            { glow: 'rgba(180, 130, 255, 0.8)', core: 'rgba(150, 100, 255, 0.9)', note: 'A' }, // Indigo - A
+            { glow: 'rgba(230, 130, 255, 0.8)', core: 'rgba(210, 100, 255, 0.9)', note: 'B' }  // Violet - B
+        ];
+
+        let flowers = [];
+        const garden = document.getElementById('garden');
+        const tooltip = document.getElementById('tooltip');
+        const loading = document.getElementById('loading');
+
+        // Prepopulated limiting beliefs and fears
+        const prepopulatedMessages = [
+            "I'm not good enough",
+            "I don't deserve success",
+            "What if I fail?",
+            "People will judge me",
+            "I'm not smart enough",
+            "It's too late for me",
+            "I'm afraid of being seen",
+            "I'm not worthy of love"
+        ];
+
+        // Create initial 25 orbs on page load
+        function createInitialOrbs() {
+            // Create 25 initial orbs
+            for (let i = 0; i < 25; i++) {
+                const flower = {
+                    id: 'flower:init_' + i + '_' + Date.now(),
+                    note: i < 8 ? prepopulatedMessages[i] : '',
+                    position: {
+                        x: Math.random() * 95 + 2.5,  // 2.5% to 97.5% horizontal - more spread
+                        y: Math.random() * 90 + 2.5   // 2.5% to 92.5% vertical - more spread
+                    },
+                    colorIndex: Math.floor(Math.random() * flowerColors.length),
+                    rotation: Math.random() * 360,
+                    floatDelay: Math.random() * 20,
+                    floatDuration: 12 + Math.random() * 12  // Faster movement
+                };
+
+                flowers.push(flower);
+            }
+        }
+
+        // Initialize the garden
+        function init() {
+            loading.style.display = 'block';
+            
+            // Create initial orbs
+            createInitialOrbs();
+            
+            loading.style.display = 'none';
+            renderGarden();
+        }
+
+        // Plant a new note with transformation animation
+        function plantNote() {
+            const input = document.getElementById('noteInput');
+            const note = input.value.trim();
+            
+            if (!note) {
+                alert('Name your fear first - give it form so you can release it');
+                return;
+            }
+
+            const writeSection = document.querySelector('.write-section');
+            const writeSectionRect = writeSection.getBoundingClientRect();
+            
+            // Create the flower data
+            const flower = {
+                id: 'flower:' + Date.now(),
+                note: note,
+                position: {
+                    x: Math.random() * 95 + 2.5,  // 2.5% to 97.5% horizontal
+                    y: Math.random() * 90 + 2.5   // 2.5% to 92.5% vertical
+                },
+                colorIndex: Math.floor(Math.random() * flowerColors.length),
+                rotation: Math.random() * 360,
+                floatDelay: Math.random() * 20,
+                floatDuration: 12 + Math.random() * 12
+            };
+
+            // Calculate target position for the new orb
+            const gardenRect = garden.getBoundingClientRect();
+            const targetX = (flower.position.x / 100) * gardenRect.width + gardenRect.left;
+            const targetY = (flower.position.y / 100) * gardenRect.height + gardenRect.top;
+
+            // Create floating message particle
+            const messageParticle = document.createElement('div');
+            messageParticle.className = 'message-particle';
+            messageParticle.textContent = note;
+            messageParticle.style.left = writeSectionRect.left + writeSectionRect.width / 2 + 'px';
+            messageParticle.style.top = writeSectionRect.top + writeSectionRect.height / 2 + 'px';
+            messageParticle.style.transform = 'translate(-50%, -50%)';
+            document.body.appendChild(messageParticle);
+
+            // Animate the write section
+            writeSection.classList.add('transforming');
+
+            // Start message particle animation
+            setTimeout(() => {
+                messageParticle.classList.add('animate');
+            }, 100);
+
+            // Create the orb at target location after a delay
+            setTimeout(() => {
+                flowers.push(flower);
+                
+                // Create and add the new orb with birth animation
+                const newFlowerEl = createFlowerElement(flower);
+                newFlowerEl.classList.add('being-born');
+                garden.appendChild(newFlowerEl);
+                
+                // Remove birth class after animation
+                setTimeout(() => {
+                    newFlowerEl.classList.remove('being-born');
+                }, 2000);
+                
+                // Scroll to see the new orb
+                setTimeout(() => {
+                    newFlowerEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 500);
+            }, 1500);
+
+            // Clean up and reset
+            setTimeout(() => {
+                messageParticle.remove();
+                writeSection.classList.remove('transforming');
+                input.value = '';
+                
+                // Hide write section and show FAB
+                hideWriteSection();
+            }, 2500);
+        }
+
+        // Render all flowers in the garden
+        function renderGarden() {
+            const gardenEl = document.getElementById('garden');
+            gardenEl.innerHTML = flowers.length === 0 ? 
+                '<div class="loading">A clear sky - all fears released...</div>' : '';
+            
+            flowers.forEach(flower => {
+                const flowerEl = createFlowerElement(flower);
+                gardenEl.appendChild(flowerEl);
+            });
+        }
+
+        // Audio context for musical notes
+        let audioContext = null;
+        
+        // Musical note frequencies (C4 to B4)
+        const noteFrequencies = {
+            'C': 261.63,
+            'D': 293.66,
+            'E': 329.63,
+            'F': 349.23,
+            'G': 392.00,
+            'A': 440.00,
+            'B': 493.88
+        };
+
+        // Initialize audio context on first interaction
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioContext;
+        }
+
+        // Play a musical note
+        function playNote(noteName) {
+            const context = initAudio();
+            const frequency = noteFrequencies[noteName];
+            
+            // Create oscillator for the note
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            
+            // Sine wave for pure, bell-like tone
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+            
+            // Gentle attack and decay envelope
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, context.currentTime + 0.05);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.8);
+            
+            // Play the note
+            oscillator.start(context.currentTime);
+            oscillator.stop(context.currentTime + 0.8);
+        }
+
+        // Burst effect when orb is clicked
+        function burstOrb(orbElement, color) {
+            // Get orb position
+            const rect = orbElement.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Add bursting animation to orb
+            orbElement.classList.add('bursting');
+
+            // Create ripple effect
+            const ripple = document.createElement('div');
+            ripple.className = 'burst-ripple';
+            ripple.style.left = (centerX - 30) + 'px';
+            ripple.style.top = (centerY - 30) + 'px';
+            ripple.style.borderColor = color.glow;
+            document.body.appendChild(ripple);
+
+            // Remove ripple after animation
+            setTimeout(() => ripple.remove(), 600);
+
+            // Create burst particles
+            const particleCount = 12;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'burst-particle';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.background = color.glow;
+                particle.style.boxShadow = `0 0 10px ${color.glow}`;
+                
+                // Random direction for each particle
+                const angle = (i / particleCount) * Math.PI * 2;
+                const distance = 80 + Math.random() * 40;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => particle.remove(), 800);
+            }
+
+            // Remove orb from array and DOM after animation
+            setTimeout(() => {
+                const orbId = orbElement.getAttribute('data-id');
+                flowers = flowers.filter(f => f.id !== orbId);
+                orbElement.remove();
+            }, 600);
+        }
+
+        // Create a flower element
+        function createFlowerElement(flower) {
+            const div = document.createElement('div');
+            div.className = 'flower';
+            div.setAttribute('data-id', flower.id);
+            div.style.left = flower.position.x + '%';
+            div.style.top = flower.position.y + '%';
+            div.style.animationDelay = `0s, ${flower.floatDelay}s, ${Math.random() * 4}s`;
+            div.style.animationDuration = `1.5s, ${flower.floatDuration}s, ${3 + Math.random() * 3}s`;
+
+            const colors = flowerColors[flower.colorIndex];
+            
+            div.innerHTML = `
+                <div class="petals" style="--glow-color: ${colors.glow}; --core-color: ${colors.core};">
+                    <div class="outer-glow"></div>
+                    <div class="core"></div>
+                </div>
+            `;
+
+            // Play note and show tooltip on hover
+            div.addEventListener('mouseenter', (e) => {
+                playNote(colors.note);
+                showTooltip(e, flower.note);
+            });
+            div.addEventListener('mouseleave', hideTooltip);
+            
+            // Burst on click
+            div.addEventListener('click', (e) => {
+                e.stopPropagation();
+                hideTooltip();
+                playNote(colors.note);
+                burstOrb(div, colors);
+            });
+
+            return div;
+        }
+
+        // Show tooltip with note
+        function showTooltip(e, note) {
+            if (!note || note.trim() === '') {
+                tooltip.textContent = '✨ An unspoken fear ✨';
+                tooltip.style.fontStyle = 'italic';
+                tooltip.style.opacity = '0.8';
+            } else {
+                tooltip.textContent = note;
+                tooltip.style.fontStyle = 'normal';
+                tooltip.style.opacity = '1';
+            }
+            
+            tooltip.classList.add('show');
+            
+            const rect = e.target.getBoundingClientRect();
+            const tooltipRect = tooltip.getBoundingClientRect();
+            
+            let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+            let top = rect.top - tooltipRect.height - 15;
+            
+            // Keep tooltip on screen
+            if (left < 10) left = 10;
+            if (left + tooltipRect.width > window.innerWidth - 10) {
+                left = window.innerWidth - tooltipRect.width - 10;
+            }
+            if (top < 10) {
+                top = rect.bottom + 15;
+                tooltip.style.setProperty('--arrow-direction', 'up');
+            }
+            
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+        }
+
+        // Hide tooltip
+        function hideTooltip() {
+            tooltip.classList.remove('show');
+        }
+
+        // Close tooltip on click outside
+        document.addEventListener('click', hideTooltip);
+
+        // Show/hide write section
+        function showWriteSection() {
+            const writeSection = document.querySelector('.write-section');
+            const fab = document.getElementById('fab');
+            writeSection.classList.remove('hidden');
+            fab.classList.remove('show');
+            
+            // Focus on textarea
+            setTimeout(() => {
+                document.getElementById('noteInput').focus();
+            }, 100);
+        }
+
+        function hideWriteSection() {
+            const writeSection = document.querySelector('.write-section');
+            const fab = document.getElementById('fab');
+            writeSection.classList.add('hidden');
+            fab.classList.add('show');
+        }
+
+        // Initialize garden
+        init();
+    </script>
+</body>
+</html>
