@@ -1,216 +1,748 @@
-<html>
-  <head>
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
-    "https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
-    <title>Journey</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Technologist Portfolio</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    * {
-      font-family: 'Quicksand', arial;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ffa177 100%);
+            background-size: 400% 400%;
+            animation: gradient-flow 15s ease infinite;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 87, 108, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 161, 119, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    #music {
-      width: 300px;
-      height: 25px;
-      margin-top: 15px;
-    }
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    #player {
-      position:absolute;
-      z-index: 20;
-      top: 10px;
-      left: 10px;
-      color: #fff;
-      display:none;
-      padding: 20px;
-      background-color: rgb(5, 5, 5, 0.3);
-    }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
 
-    #loading-text {
-      position: absolute;
-      z-index: 20;
-      top: 35vh;
-      left: 35%;
-      display: inline-block;
-      color: #fff;
-      text-align: center;
-      font-size: 35px;
-    }
-      #start-bttn {
-        position: absolute;
-        z-index: 20;
-        top: 50vh;
-        left: 45vw;
-        width: 100px;
-        height: 60px;
-        background-color: transparent;
-        background-repeat: no-repeat;
-        color: #fff;
-        border: 2px solid #fff;
-        cursor: pointer;
-        display: none;
-        font-size: 15px;
-      }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
 
-      #start-bttn:hover {
-        background-color: #fff;
-        color: #333;
-      }
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
 
-      #color-bttn {
-        position: absolute;
-        z-index: 20;
-        top: 50vh;
-        left: 100px;
-      }
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
 
-      #splash {
-  position: absolute;
+        .hero-content {
+            max-width: 800px;
+        }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+        .glitch-text {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            letter-spacing: -0.02em;
+            animation: glow 3s ease-in-out infinite;
+        }
 
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.3); }
+            50% { text-shadow: 0 0 60px rgba(255, 255, 255, 0.8), 0 0 100px rgba(255, 255, 255, 0.5); }
+        }
 
-  width: 200px;
-  height: 200px;
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-weight: 300;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
 
-  margin: auto;
-  z-index: 20;
-}
+        .subtitle .highlight {
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+        }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+        .cta-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
 
-.loading {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 0.25rem solid rgba(255, 255, 255, 0.2);
-  border-top-color: white;
-  animation: spin 1s infinite linear;
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+        }
 
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.95);
+            color: #764ba2;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
 
-}
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-tertiary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-tertiary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 8rem 0 4rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-grid {
+            display: grid;
+            gap: 4rem;
+        }
+
+        .project-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 3rem;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.1), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:nth-child(even) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .project-card:nth-child(even) .project-image {
+            order: 2;
+        }
+
+        .project-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-image.sovereignty {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3));
+        }
+
+        .project-image.mindscape {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(168, 85, 247, 0.3));
+        }
+
+        .project-icon {
+            animation: float-icon 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .project-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .project-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .project-link:hover {
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateX(5px);
+        }
+
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .project-link:hover .arrow {
+            transform: translateX(5px);
+        }
+
+        /* Experiments Section */
+        .experiments {
+            padding: 4rem 0 8rem 0;
+            position: relative;
+        }
+
+        .experiment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .experiment-card {
+            padding: 2rem;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .experiment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .experiment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.08), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .experiment-card:hover::before {
+            opacity: 1;
+        }
+
+        .experiment-image {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .experiment-image.notespop {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.25));
+        }
+
+        .experiment-image.journey {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.25));
+        }
+
+        .experiment-image.iridescent {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(99, 102, 241, 0.25));
+        }
+
+        .experiment-icon {
+            animation: float-icon 3s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+        }
+
+        .experiment-content h4 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .experiment-tag {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .experiment-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .experiment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .experiment-link:hover {
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .project-card {
+                grid-template-columns: 1fr !important;
+                gap: 2rem;
+            }
+
+            .project-card:nth-child(even) .project-image {
+                order: 0;
+            }
+
+            .cta-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .experiment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            opacity: 0.8;
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.2));
+        }
     </style>
-  </head>
-  <body>
-    <div id="player">
-      Playing: The Journey - Aevion ( Oliver Heldens Edit )
-      <br />
-      <audio controls loop id="music" src="../../audio/journey.mp3" preload="auto"></audio>
-    </div>
-    <div id="splash">
-      <div class="loading"></div>
-    </div>
-    <div id="loading-text">
-    Ready for your journey ?
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-particles" id="particles"></div>
 
-    </div>
-    <a-scene>
-      <a-asset>
-        <a-asset-item id='flying-car_body-obj' src='../models/toy_car.obj'
-        ></a-asset-item>
-        <a-asset-item id='flying-car_body-mtl' src='../models/toy_car.mtl'
-        ></a-asset-item>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="glitch-text">Creative Technologist</h1>
+                <p class="subtitle">
+                    Building <span class="highlight">experimental interfaces</span> and 
+                    <span class="highlight">speculative futures</span> at the intersection of 
+                    design, code, and human experience
+                </p>
+                
+                <div class="cta-container">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+                    <a href="#about" class="btn btn-tertiary">About Me</a>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+            </div>
+        </div>
+    </section>
 
-      </a-asset>
-      <a-entity
-        id='goa'
-        environment="preset: goaland; dressingAmount: 300; dressingColor: #a122a9; dressingScale:7; horizonColor:#81298f"
-        ></a-entity>
+    <!-- Major Projects Section -->
+    <section class="projects" id="projects">
+        <div class="container">
+            <h2 class="section-title">Major Projects</h2>
+            <p class="section-subtitle">Long-term explorations in design systems and human-centered interfaces</p>
+            
+            <div class="project-grid">
+                <!-- Project 1: Sovereignty Node -->
+                <div class="project-card">
+                    <div class="project-image sovereignty">
+                        <div class="project-icon">🌿</div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Design System • Solarpunk</span>
+                        <h3>Sovereignty Node</h3>
+                        <p class="project-description">
+                            A future design system for radiant autonomy, enabled by local decentralized 
+                            intelligence and hardware. Inspired by solarpunk principles, this project 
+                            reimagines how we interact with technology through the lens of sustainability, 
+                            community ownership, and digital self-determination.
+                        </p>
+                        <a href="#" class="project-link">
+                            Explore the system
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
 
-      <a-entity
-        id="car-group"
-        position = "0 0 60"
-      >
-          <a-entity
-          obj-model="obj: #flying-car_body-obj; mtl: #flying-car_body-mtl"
-          shadow="cast: true"
-          scale="0.007 0.007 0.007"
-          position="-1.5 0 -1"
-          rotation="0 180 0"></a-entity>
+                <!-- Project 2: Mind Scape -->
+                <div class="project-card">
+                    <div class="project-image mindscape">
+                        <div class="project-icon">🌸</div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Digital Garden • Visualization</span>
+                        <h3>Mind Scape</h3>
+                        <p class="project-description">
+                            A digital garden where thoughts bloom into tangible entities. Gratitude 
+                            manifests as vibrant flowers, frustration takes form as quirky poop-like 
+                            creatures, and every emotion finds its visual metaphor. An experimental 
+                            interface for emotional awareness and mental cartography.
+                        </p>
+                        <a href="#" class="project-link">
+                            Enter the garden
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-          <a-entity camera look-controls wasd-controls position="-0.5 2 3"></a-entity>
+    <!-- Experiments Section -->
+    <section class="experiments" id="experiments">
+        <div class="container">
+            <h2 class="section-title">Experiments & Prototypes</h2>
+            <p class="section-subtitle">Playful explorations with emerging technologies</p>
+            
+            <div class="experiment-grid">
+                <!-- Experiment 1: Notes Pop -->
+                <div class="experiment-card">
+                    <div class="experiment-image notespop">
+                        <div class="experiment-icon">🫧</div>
+                    </div>
+                    <div class="experiment-content">
+                        <span class="experiment-tag">Claude AI Artifact</span>
+                        <h4>Notes Pop</h4>
+                        <p class="experiment-description">
+                            Digital bubble wrap for the soul. Each limiting belief appears as a bubble 
+                            waiting to be popped. A cathartic micro-interaction built with Claude.
+                        </p>
+                        <a href="#" class="experiment-link">
+                            Try it →
+                        </a>
+                    </div>
+                </div>
 
-        </a-entity>
+                <!-- Experiment 2: Journey -->
+                <div class="experiment-card">
+                    <div class="experiment-image journey">
+                        <div class="experiment-icon">🍄</div>
+                    </div>
+                    <div class="experiment-content">
+                        <span class="experiment-tag">Three.js</span>
+                        <h4>Journey</h4>
+                        <p class="experiment-description">
+                            A musical journey through the landscape of mushrooms. An immersive 3D 
+                            experience exploring organic forms and generative soundscapes.
+                        </p>
+                        <a href="#" class="experiment-link">
+                            Explore →
+                        </a>
+                    </div>
+                </div>
 
-      </a-entity>
-    </a-scene>
-
-    <button id="start-bttn">LET'S GO</button>
-    <button id="color-bttn">Change Color</button>
+                <!-- Experiment 3: Our Iridescent Future -->
+                <div class="experiment-card">
+                    <div class="experiment-image iridescent">
+                        <div class="experiment-icon">✨</div>
+                    </div>
+                    <div class="experiment-content">
+                        <span class="experiment-tag">AI Art</span>
+                        <h4>Our Iridescent Future</h4>
+                        <p class="experiment-description">
+                            AI-generated visions exploring the symbiosis between humanity and 
+                            technology. A speculative art series imagining AI-cyborg coexistence.
+                        </p>
+                        <a href="#" class="experiment-link">
+                            View gallery →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
-    const sceneEl = document.querySelector('a-scene');
-    const playBttn = document.getElementById('start-bttn');
-    const music = document.getElementById('music');
-    const splash = document.querySelector('#splash');
-    const player = document.getElementById('player');
-    const audio = document.getElementById('music');
-    const goa = sceneEl.querySelector('#goa');
-    const loadingText = document.getElementById('loading-text');
-    const colorBttn = document.getElementById('color-bttn');
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
 
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
 
+        // Mouse tracking for project cards
+        const projectCards = document.querySelectorAll('.project-card');
+        const experimentCards = document.querySelectorAll('.experiment-card');
+        
+        [...projectCards, ...experimentCards].forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                card.style.setProperty('--mouse-x', x + '%');
+                card.style.setProperty('--mouse-y', y + '%');
+            });
+        });
 
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
 
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
 
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
 
-    sceneEl.addEventListener('loaded', () => {
-    audio.addEventListener('canplay', ()=> {
-        splash.style.display = 'none';
-        playBttn.style.display= 'block';
-    });
-  });
-
-    colorBttn.addEventListener('click', ()=>{
-      let color=chroma.random();
-      let colorHex=chroma(color).name();
-      let color2 = chroma.random();
-      let colorHex2 = chroma.random().name();
-      goa.setAttribute('environment',{
-        dressingColor: colorHex,
-        groundColor: colorHex2
-      });
-    })
-
-      const car = sceneEl.querySelector('#car-group');
-      let interval;
-
-
-
-
-
-
-
-
-      playBttn.addEventListener('click', ()=>{
-        playBttn.style.display = "none";
-        music.play();
-        player.style.display = 'block';
-        loadingText.style.display='none'
-        interval = setInterval(() => {
-          let carPosition = car.object3D.position.z;
-          car.object3D.position.z -= 0.01;
-          if (carPosition < -30) {
-            car.object3D.position.z += 100;
-          }
-        },1)
-
-      });
+        [...projectCards, ...experimentCards].forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(card);
+        });
     </script>
-  </body>
+</body>
 </html>
