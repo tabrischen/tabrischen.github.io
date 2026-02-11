@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creative Technologist Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -40,6 +41,381 @@
                 radial-gradient(circle at 40% 20%, rgba(255, 161, 119, 0.2) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 1rem 0;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ffffff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(20px);
+                padding: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .nav-links.active {
+                max-height: 400px;
+            }
+
+            .nav-links a {
+                padding: 1.2rem 2rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-links a::after {
+                display: none;
+            }
+        }
+
+        /* Header Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.05em;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link:hover::after {
+            width: 60%;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 70%;
+                max-width: 300px;
+                background: rgba(102, 126, 234, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
+                gap: 1.5rem;
+                transition: right 0.3s ease;
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-link {
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 1rem 0;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ffffff;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 70%;
+                max-width: 300px;
+                background: rgba(26, 26, 46, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 6rem 2rem 2rem;
+                gap: 1.5rem;
+                align-items: flex-start;
+                transition: right 0.3s ease;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+            }
+
+            nav.active {
+                right: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            nav a {
+                font-size: 1.1rem;
+                width: 100%;
+            }
         }
 
         /* Animated background particles */
@@ -89,8 +465,25 @@
             position: relative;
         }
 
+        /* 3D Canvas */
+        #canvas-3d {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            max-width: 90vw;
+            max-height: 90vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
         .hero-content {
             max-width: 800px;
+            position: relative;
+            z-index: 2;
         }
 
         .glitch-text {
@@ -184,7 +577,7 @@
 
         /* Projects Section */
         .projects {
-            padding: 8rem 0 4rem 0;
+            padding: 8rem 0;
             position: relative;
         }
 
@@ -283,6 +676,100 @@
             background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(168, 85, 247, 0.3));
         }
 
+        .project-image.notespop {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.3));
+        }
+
+        .project-image.journey {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+        }
+
+        .project-image.iridescent {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(251, 191, 36, 0.3), rgba(139, 92, 246, 0.3));
+        }
+
+        .project-image.shimmer {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.3));
+        }
+
+        .project-link-disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        .project-link-disabled:hover {
+            transform: none;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .experiments {
+            padding-top: 4rem;
+        }
+
+        /* Stylish section divider */
+        .section-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            margin: 6rem 0;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ffa177 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: rotate-diamond 10s linear infinite;
+        }
+
+        @keyframes rotate-diamond {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Smaller cards for experimental projects */
+        .experiments .project-grid {
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .experiments .project-card {
+            grid-template-columns: 1fr;
+            padding: 2rem;
+            gap: 1.5rem;
+        }
+
+        .experiments .project-card:nth-child(even) .project-image {
+            order: 0;
+        }
+
+        .experiments .project-image {
+            aspect-ratio: 16/9;
+        }
+
+        .experiments .project-content h3 {
+            font-size: 1.8rem;
+        }
+
+        .experiments .project-description {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
         .project-icon {
             animation: float-icon 3s ease-in-out infinite;
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
@@ -353,138 +840,13 @@
             transform: translateX(5px);
         }
 
-        /* Experiments Section */
-        .experiments {
-            padding: 4rem 0 8rem 0;
-            position: relative;
-        }
-
-        .experiment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .experiment-card {
-            padding: 2rem;
-            border-radius: 24px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .experiment-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .experiment-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.08), transparent 50%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .experiment-card:hover::before {
-            opacity: 1;
-        }
-
-        .experiment-image {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            aspect-ratio: 16/10;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .experiment-image.notespop {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.25));
-        }
-
-        .experiment-image.journey {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.25));
-        }
-
-        .experiment-image.iridescent {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(99, 102, 241, 0.25));
-        }
-
-        .experiment-icon {
-            animation: float-icon 3s ease-in-out infinite;
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
-        }
-
-        .experiment-content h4 {
-            font-size: 1.75rem;
-            margin-bottom: 0.75rem;
-            color: #ffffff;
-            font-weight: 700;
-            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .experiment-tag {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            border-radius: 16px;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-        }
-
-        .experiment-description {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1.5rem;
-            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .experiment-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            padding: 0.6rem 1.2rem;
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-        }
-
-        .experiment-link:hover {
-            gap: 0.8rem;
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-
         /* Responsive */
+        @media (max-width: 1200px) {
+            .experiments .project-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 968px) {
             .project-card {
                 grid-template-columns: 1fr !important;
@@ -504,8 +866,13 @@
                 width: 100%;
                 max-width: 300px;
             }
+            
+            #canvas-3d {
+                width: 400px;
+                height: 400px;
+            }
 
-            .experiment-grid {
+            .experiments .project-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -517,6 +884,7 @@
             left: 50%;
             transform: translateX(-50%);
             animation: bounce 2s infinite;
+            z-index: 3;
         }
 
         @keyframes bounce {
@@ -531,14 +899,135 @@
             opacity: 0.8;
             filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.2));
         }
+
+        /* Header Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            padding: 1rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ffffff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive header */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: rgba(102, 126, 234, 0.95);
+                backdrop-filter: blur(20px);
+                padding: 2rem;
+                gap: 1.5rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">CT</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#projects" class="nav-link">Major Projects</a>
+                <a href="#experiments" class="nav-link">Experiments</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
     <!-- Animated background -->
     <div class="bg-particles" id="particles"></div>
 
     <!-- Hero Section -->
     <section class="hero">
+        <canvas id="canvas-3d"></canvas>
         <div class="container">
             <div class="hero-content">
                 <h1 class="glitch-text">Creative Technologist</h1>
@@ -567,7 +1056,7 @@
     <section class="projects" id="projects">
         <div class="container">
             <h2 class="section-title">Major Projects</h2>
-            <p class="section-subtitle">Long-term explorations in design systems and human-centered interfaces</p>
+            <p class="section-subtitle">Long-term explorations in autonomy, consciousness, and human-centered design</p>
             
             <div class="project-grid">
                 <!-- Project 1: Sovereignty Node -->
@@ -584,7 +1073,7 @@
                             reimagines how we interact with technology through the lens of sustainability, 
                             community ownership, and digital self-determination.
                         </p>
-                        <a href="#" class="project-link">
+                        <a href="https://sovereigntynode.github.io" target="_blank" rel="noopener noreferrer" class="project-link">
                             Explore the system
                             <span class="arrow">→</span>
                         </a>
@@ -605,8 +1094,106 @@
                             creatures, and every emotion finds its visual metaphor. An experimental 
                             interface for emotional awareness and mental cartography.
                         </p>
+                        <a href="#" class="project-link project-link-disabled">
+                            Coming Soon
+                            <span class="arrow">✨</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="container">
+        <div class="section-divider"></div>
+    </div>
+
+    <!-- Experimental Projects Section -->
+    <section class="projects experiments" id="experiments">
+        <div class="container">
+            <h2 class="section-title">Experimental Playground</h2>
+            <p class="section-subtitle">Shorter experiments playing with technology, interaction, and speculative futures</p>
+            
+            <div class="project-grid">
+                <!-- Experiment 1: Notes Pop -->
+                <div class="project-card">
+                    <div class="project-image notespop">
+                        <div class="project-icon">🫧</div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Interactive • Therapeutic</span>
+                        <h3>Notes Pop</h3>
+                        <p class="project-description">
+                            Digital bubble wrap for the soul. Each limiting belief, fear, and self-doubt 
+                            appears as a bubble waiting to be popped. A playful, cathartic experience 
+                            that transforms anxiety into satisfying micro-interactions. Built as a Claude artifact.
+                        </p>
                         <a href="#" class="project-link">
-                            Enter the garden
+                            Start popping
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Experiment 2: Journey -->
+                <div class="project-card">
+                    <div class="project-image journey">
+                        <div class="project-icon">🎵</div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Audio • 3D Experience</span>
+                        <h3>Journey</h3>
+                        <p class="project-description">
+                            A musical journey through an ever-evolving Three.js landscape. Sound and visuals 
+                            intertwine as you navigate through procedurally generated terrain, where each step 
+                            creates harmony and every turn reveals new sonic textures. An exploration of 
+                            synesthesia in digital space.
+                        </p>
+                        <a href="#" class="project-link">
+                            Begin journey
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Experiment 3: Our Iridescent Future -->
+                <div class="project-card">
+                    <div class="project-image iridescent">
+                        <div class="project-icon">✨</div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">AI Art • Symbiosis</span>
+                        <h3>Our Iridescent Future</h3>
+                        <p class="project-description">
+                            An exploration of AI-generated art as symbiosis between human creativity and 
+                            machine intelligence. Drawing from mythology and alchemical traditions, this 
+                            project weaves together ancient wisdom and emergent technology to envision 
+                            futures that shimmer with possibility.
+                        </p>
+                        <a href="#" class="project-link">
+                            View gallery
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Experiment 4: Shimmer -->
+                <div class="project-card">
+                    <div class="project-image shimmer">
+                        <div class="project-icon">🌌</div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Speculative Fiction • Interactive</span>
+                        <h3>Shimmer</h3>
+                        <p class="project-description">
+                            Inspired by Annihilation, this speculative experience explores a universe where 
+                            alien spores create human-organism hybrids. Navigate through prismatic environments 
+                            where biology and consciousness merge, questioning what it means to be human in a 
+                            world of radical transformation.
+                        </p>
+                        <a href="#" class="project-link">
+                            Enter the shimmer
                             <span class="arrow">→</span>
                         </a>
                     </div>
@@ -615,71 +1202,98 @@
         </div>
     </section>
 
-    <!-- Experiments Section -->
-    <section class="experiments" id="experiments">
-        <div class="container">
-            <h2 class="section-title">Experiments & Prototypes</h2>
-            <p class="section-subtitle">Playful explorations with emerging technologies</p>
-            
-            <div class="experiment-grid">
-                <!-- Experiment 1: Notes Pop -->
-                <div class="experiment-card">
-                    <div class="experiment-image notespop">
-                        <div class="experiment-icon">🫧</div>
-                    </div>
-                    <div class="experiment-content">
-                        <span class="experiment-tag">Claude AI Artifact</span>
-                        <h4>Notes Pop</h4>
-                        <p class="experiment-description">
-                            Digital bubble wrap for the soul. Each limiting belief appears as a bubble 
-                            waiting to be popped. A cathartic micro-interaction built with Claude.
-                        </p>
-                        <a href="#" class="experiment-link">
-                            Try it →
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Experiment 2: Journey -->
-                <div class="experiment-card">
-                    <div class="experiment-image journey">
-                        <div class="experiment-icon">🍄</div>
-                    </div>
-                    <div class="experiment-content">
-                        <span class="experiment-tag">Three.js</span>
-                        <h4>Journey</h4>
-                        <p class="experiment-description">
-                            A musical journey through the landscape of mushrooms. An immersive 3D 
-                            experience exploring organic forms and generative soundscapes.
-                        </p>
-                        <a href="#" class="experiment-link">
-                            Explore →
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Experiment 3: Our Iridescent Future -->
-                <div class="experiment-card">
-                    <div class="experiment-image iridescent">
-                        <div class="experiment-icon">✨</div>
-                    </div>
-                    <div class="experiment-content">
-                        <span class="experiment-tag">AI Art</span>
-                        <h4>Our Iridescent Future</h4>
-                        <p class="experiment-description">
-                            AI-generated visions exploring the symbiosis between humanity and 
-                            technology. A speculative art series imagining AI-cyborg coexistence.
-                        </p>
-                        <a href="#" class="experiment-link">
-                            View gallery →
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <script>
+        // Three.js 3D Scene Setup
+        const canvas = document.getElementById('canvas-3d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: canvas, 
+            alpha: true,
+            antialias: true 
+        });
+        
+        renderer.setSize(600, 600);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        camera.position.z = 5;
+
+        // Create abstract sculptural geometry - Torus Knot
+        const geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 200, 32);
+        
+        // Material with elegant white appearance
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            metalness: 0.2,
+            roughness: 0.1,
+            transparent: true,
+            opacity: 0.8,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1,
+        });
+        
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        // Lighting setup
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const pointLight1 = new THREE.PointLight(0x667eea, 1);
+        pointLight1.position.set(5, 5, 5);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xf5576c, 1);
+        pointLight2.position.set(-5, -5, 5);
+        scene.add(pointLight2);
+
+        const pointLight3 = new THREE.PointLight(0xffa177, 0.8);
+        pointLight3.position.set(0, 5, -5);
+        scene.add(pointLight3);
+
+        // Mouse interaction variables
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smooth mouse follow
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+
+            // Rotate the sculpture continuously
+            torusKnot.rotation.x += 0.003;
+            torusKnot.rotation.y += 0.005;
+            
+            // Add mouse influence to rotation
+            torusKnot.rotation.x += targetY * 0.01;
+            torusKnot.rotation.y += targetX * 0.01;
+
+            // Subtle scale pulse
+            const scale = 1 + Math.sin(Date.now() * 0.001) * 0.05;
+            torusKnot.scale.set(scale, scale, scale);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const size = Math.min(600, window.innerWidth * 0.9, window.innerHeight * 0.9);
+            renderer.setSize(size, size);
+            camera.aspect = 1;
+            camera.updateProjectionMatrix();
+        });
+
         // Generate floating particles
         const particlesContainer = document.getElementById('particles');
         const particleCount = 50;
@@ -695,9 +1309,8 @@
 
         // Mouse tracking for project cards
         const projectCards = document.querySelectorAll('.project-card');
-        const experimentCards = document.querySelectorAll('.experiment-card');
         
-        [...projectCards, ...experimentCards].forEach(card => {
+        projectCards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -737,7 +1350,7 @@
             });
         }, observerOptions);
 
-        [...projectCards, ...experimentCards].forEach(card => {
+        projectCards.forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(50px)';
             card.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
