@@ -524,6 +524,110 @@
             }
         }
 
+        /* Success Modal */
+        .success-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 600px;
+            width: 90%;
+            padding: 3rem;
+            background: rgba(42, 63, 95, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 2px solid rgba(255, 215, 125, 0.5);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
+            z-index: 60;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .success-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+            animation: successAppear 0.8s ease-out;
+        }
+
+        @keyframes successAppear {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-modal h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            color: #ffd97d;
+            text-shadow: 0 2px 20px rgba(255, 215, 125, 0.5);
+        }
+
+        .success-modal p {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #f5f1e8;
+            margin-bottom: 2rem;
+        }
+
+        .success-modal .sparkle {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: sparkleRotate 2s infinite ease-in-out;
+        }
+
+        @keyframes sparkleRotate {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.2);
+            }
+        }
+
+        .success-modal button {
+            margin: 0.5rem;
+            padding: 1rem 2.5rem;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--petal-gold) 0%, var(--petal-coral) 100%);
+            color: var(--earth-dark);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .success-modal button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 215, 125, 0.4);
+        }
+
+        .success-modal button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f5f1e8;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .success-modal button.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         /* Transformation animation */
         .write-section.transforming {
             animation: sectionTransform 1.5s ease-out forwards;
@@ -703,6 +807,9 @@
         <div class="write-section">
             <button class="close-btn" onclick="hideWriteSection()">×</button>
             <h2>Release Your Fear</h2>
+            <p style="font-size: 0.9rem; color: #d4c5a9; margin-bottom: 1rem; font-style: italic;">
+                🔊 Turn on sound for the best experience
+            </p>
             <textarea id="noteInput" placeholder="What is holding you back from realizing your highest self today?"></textarea>
             <button onclick="plantNote()">Release into the Sky</button>
         </div>
@@ -714,6 +821,16 @@
 
     <!-- Tooltip for viewing notes -->
     <div class="note-tooltip" id="tooltip"></div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="sparkle">✨</div>
+        <h2>You Did It!</h2>
+        <p>You have defeated all your fears.<br>Now go and do great things!</p>
+        <div>
+            <button onclick="playAgain()">Play Again</button>
+        </div>
+    </div>
 
     <!-- Floating action button -->
     <button class="fab" id="fab" onclick="showWriteSection()">✨</button>
@@ -760,23 +877,38 @@
 
         // Prepopulated limiting beliefs and fears
         const prepopulatedMessages = [
-            "I'm not good enough",
-            "I don't deserve success",
-            "What if I fail?",
-            "People will judge me",
-            "I'm not smart enough",
-            "It's too late for me",
-            "I'm afraid of being seen",
-            "I'm not worthy of love"
+            "I am afraid of death.",
+            "Who am I to think I can do that? It feels egotistical to want more attention, money, or influence.",
+            "I am afraid that I will fail or not live up to expectations.",
+            "I am 25/35/50 years old. I should have figured this out by now. It's too late to start over.",
+            "I am afraid that I will be rejected, abandoned, or unloved.",
+            "If I let go of my current identity/habits/job, I will fall apart. The chaos of the unknown is scarier than the misery of the known",
+            "I am afraid of losing the people or things that matter to me.",
+            "Eventually, everyone is going to realize I don't know what I'm doing. I'm just faking it.",
+            "I am afraid of the unknown and what the future may bring.",
+            "What will they think? What if I fail publicly? What if I succeed and they talk about me behind my back?",
+            "I am afraid that others will judge, shame, or criticize me.",
+            "If I allow myself to feel deeply or hope for something big, I will be devastated if it doesn't work out",
+            "I am afraid of being lonely or emotionally disconnected.",
+            "If I change, I will lose my friends/family/partner. They won't recognize me, or they will resent me for succeeding where they haven't.",
+            "I am afraid that I have no control over my life or circumstances.",
+            "I don't want to close any doors. If I pick one path, I might miss out on another opportunity.",
+            "I am afraid of pain, suffering, or being hurt.",
+            "If I admit I have the power to change my life, then I am responsible for all the misery I've endured so far—and I am responsible for fixing it.",
+            "I am afraid that my life has no meaning or purpose.",
+            "I am afraid of losing my identity or sense of self.",
+            "I am afraid of conflict, confrontation, or upsetting others.",
+            "I don't have what it takes. I need to acquire more skills, more certifications, or more confidence before I deserve to start"
         ];
 
-        // Create initial 25 orbs on page load
+        // Create initial 18 orbs on page load
         function createInitialOrbs() {
-            // Create 25 initial orbs
-            for (let i = 0; i < 25; i++) {
+            // Create 18 orbs with randomly selected fears
+            for (let i = 0; i < 18; i++) {
+                const randomIndex = Math.floor(Math.random() * prepopulatedMessages.length);
                 const flower = {
                     id: 'flower:init_' + i + '_' + Date.now(),
-                    note: i < 8 ? prepopulatedMessages[i] : '',
+                    note: prepopulatedMessages[randomIndex],
                     position: {
                         x: Math.random() * 95 + 2.5,  // 2.5% to 97.5% horizontal - more spread
                         y: Math.random() * 90 + 2.5   // 2.5% to 92.5% vertical - more spread
@@ -942,8 +1074,71 @@
             oscillator.stop(context.currentTime + 0.8);
         }
 
+        // Play satisfying pop sound
+        function playPopSound() {
+            const context = initAudio();
+            
+            // Create a short, punchy pop sound using multiple oscillators
+            const now = context.currentTime;
+            
+            // Low frequency component for the "thump"
+            const bass = context.createOscillator();
+            const bassGain = context.createGain();
+            bass.connect(bassGain);
+            bassGain.connect(context.destination);
+            bass.frequency.setValueAtTime(150, now);
+            bass.frequency.exponentialRampToValueAtTime(50, now + 0.1);
+            bassGain.gain.setValueAtTime(0.4, now);
+            bassGain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+            bass.start(now);
+            bass.stop(now + 0.15);
+            
+            // High frequency component for the "pop"
+            const pop = context.createOscillator();
+            const popGain = context.createGain();
+            pop.connect(popGain);
+            popGain.connect(context.destination);
+            pop.frequency.setValueAtTime(800, now);
+            pop.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+            popGain.gain.setValueAtTime(0.3, now);
+            popGain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+            pop.start(now);
+            pop.stop(now + 0.08);
+            
+            // White noise for the "burst"
+            const bufferSize = context.sampleRate * 0.05;
+            const buffer = context.createBuffer(1, bufferSize, context.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            const noise = context.createBufferSource();
+            const noiseGain = context.createGain();
+            const noiseFilter = context.createBiquadFilter();
+            
+            noise.buffer = buffer;
+            noise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(context.destination);
+            
+            noiseFilter.type = 'highpass';
+            noiseFilter.frequency.setValueAtTime(2000, now);
+            
+            noiseGain.gain.setValueAtTime(0.15, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+            
+            noise.start(now);
+            noise.stop(now + 0.05);
+        }
+
         // Burst effect when orb is clicked
         function burstOrb(orbElement, color) {
+            // Play satisfying pop sound
+            playPopSound();
+            
+            // Ensure tooltip is hidden
+            hideTooltip();
+            
             // Get orb position
             const rect = orbElement.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
@@ -993,7 +1188,44 @@
                 const orbId = orbElement.getAttribute('data-id');
                 flowers = flowers.filter(f => f.id !== orbId);
                 orbElement.remove();
+                
+                // Check if all fears are defeated
+                checkAllFearsDefeated();
             }, 600);
+        }
+
+        // Check if all fears are defeated
+        function checkAllFearsDefeated() {
+            if (flowers.length === 0) {
+                // Make sure tooltip is hidden
+                hideTooltip();
+                
+                setTimeout(() => {
+                    showSuccessModal();
+                }, 500);
+            }
+        }
+
+        // Show success modal
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.add('show');
+        }
+
+        // Close success modal
+        function closeSuccess() {
+            const modal = document.getElementById('successModal');
+            modal.classList.remove('show');
+        }
+
+        // Play again - reset all orbs
+        function playAgain() {
+            closeSuccess();
+            
+            // Recreate initial orbs
+            flowers = [];
+            createInitialOrbs();
+            renderGarden();
         }
 
         // Create a flower element
@@ -1025,8 +1257,8 @@
             // Burst on click
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
-                hideTooltip();
-                playNote(colors.note);
+                hideTooltip();  // Hide tooltip immediately
+                playPopSound();
                 burstOrb(div, colors);
             });
 
@@ -1035,17 +1267,14 @@
 
         // Show tooltip with note
         function showTooltip(e, note) {
-            if (!note || note.trim() === '') {
-                tooltip.textContent = '✨ An unspoken fear ✨';
-                tooltip.style.fontStyle = 'italic';
-                tooltip.style.opacity = '0.8';
-            } else {
-                tooltip.textContent = note;
-                tooltip.style.fontStyle = 'normal';
-                tooltip.style.opacity = '1';
-            }
+            const tooltip = document.getElementById('tooltip');
+            
+            tooltip.textContent = note;
+            tooltip.style.fontStyle = 'normal';
             
             tooltip.classList.add('show');
+            tooltip.style.opacity = '1';
+            tooltip.style.pointerEvents = 'auto';
             
             const rect = e.target.getBoundingClientRect();
             const tooltipRect = tooltip.getBoundingClientRect();
@@ -1069,7 +1298,11 @@
 
         // Hide tooltip
         function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
             tooltip.classList.remove('show');
+            // Force hide immediately
+            tooltip.style.opacity = '0';
+            tooltip.style.pointerEvents = 'none';
         }
 
         // Close tooltip on click outside
