@@ -1605,6 +1605,8 @@
     </section>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
         // Mobile menu toggle
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
@@ -1615,7 +1617,6 @@
             navLinks.classList.toggle('active');
         });
 
-        // Close menu when clicking on a link
         navLinkItems.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenuBtn.classList.remove('active');
@@ -1623,7 +1624,6 @@
             });
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.nav-container')) {
                 mobileMenuBtn.classList.remove('active');
@@ -1631,23 +1631,44 @@
             }
         });
 
-        // Obfuscated email reveal - defeats bot harvesting
-        const emailParts = ['tabris', '.', 'chen', '@', 'gmail', '.', 'com'];
-        const contactLink = document.getElementById('contact-link');
-        const contactEmail = document.getElementById('contact-email');
+        // Email reveal — typewriter animation, bot-proof (never written in source)
+        const p1 = ['t','a','b','r','i','s'];
+        const p2 = ['c','h','e','n'];
+        const p3 = ['g','m','a','i','l'];
+        const p4 = ['c','o','m'];
+        const emailEl = document.getElementById('contact-email');
+        const contactBtn = document.getElementById('contact-link');
         let revealed = false;
 
-        contactLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!revealed) {
-                const email = emailParts.join('');
-                contactEmail.textContent = email;
-                contactLink.href = 'mailto:' + email;
+        if (contactBtn && emailEl) {
+            contactBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (revealed) return;
                 revealed = true;
-            } else {
-                window.location.href = contactLink.href;
-            }
-        });
+
+                const full = [...p1, '.', ...p2, '@', ...p3, '.', ...p4];
+                emailEl.textContent = '';
+                emailEl.style.borderRight = '2px solid rgba(255,255,255,0.8)';
+
+                let i = 0;
+                const type = setInterval(() => {
+                    emailEl.textContent += full[i];
+                    i++;
+                    if (i >= full.length) {
+                        clearInterval(type);
+                        emailEl.style.borderRight = 'none';
+                        const addr = full.join('');
+                        contactBtn.href = 'mai' + 'lto:' + addr;
+                        contactBtn.title = 'Send an email';
+                        // Second click opens mailto
+                        contactBtn.addEventListener('click', (e2) => {
+                            e2.preventDefault();
+                            window.location.href = contactBtn.href;
+                        }, { once: true });
+                    }
+                }, 60);
+            });
+        }
 
         // Three.js 3D Scene Setup
         const canvas = document.getElementById('canvas-3d');
@@ -1667,14 +1688,12 @@
         const geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 200, 32);
         
         // Material with elegant white appearance
-        const material = new THREE.MeshPhysicalMaterial({
+        const material = new THREE.MeshStandardMaterial({
             color: 0xffffff,
-            metalness: 0.2,
-            roughness: 0.1,
+            metalness: 0.3,
+            roughness: 0.2,
             transparent: true,
             opacity: 0.8,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
         });
         
         const torusKnot = new THREE.Mesh(geometry, material);
@@ -1802,6 +1821,8 @@
             card.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
             observer.observe(card);
         });
+
+        }); // end DOMContentLoaded
     </script>
 
     <!-- Section Divider -->
