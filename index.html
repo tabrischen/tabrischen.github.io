@@ -669,6 +669,10 @@
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.3));
         }
 
+        .project-image.zen {
+            background: linear-gradient(135deg, rgba(134, 239, 172, 0.3), rgba(167, 243, 208, 0.3), rgba(110, 231, 183, 0.2));
+        }
+
         .project-link-disabled {
             cursor: default;
             opacity: 0.8;
@@ -1009,6 +1013,12 @@
             font-weight: 300;
         }
 
+        .about-body em {
+            font-style: italic;
+            color: rgba(255, 255, 255, 1);
+            font-weight: 400;
+        }
+
         .about-body p + p {
             margin-top: 1.2rem;
         }
@@ -1065,6 +1075,73 @@
                 width: 200px;
                 height: 240px;
             }
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .contact-inner {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .contact-heading {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 400;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.01em;
+            line-height: 1.15;
+        }
+
+        .contact-heading em {
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .contact-subtext {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 3rem;
+        }
+
+        .contact-email-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 2.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .contact-email-wrap:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.45);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-email-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: 0.02em;
+        }
+
+        .contact-email-icon {
+            font-size: 1.3rem;
         }
 
         /* Footer */
@@ -1328,10 +1405,10 @@
                             reimagines how we interact with technology through the lens of sustainability, 
                             community ownership, and digital self-determination.
                         </p>
-                        <a href="https://sovereigntynode.github.io" target="_blank" rel="noopener noreferrer" class="project-link">
-                            Explore the system
-                            <span class="arrow">→</span>
-                        </a>
+                        <span class="project-link project-link-disabled">
+                            Coming Soon
+                            <span class="arrow">✨</span>
+                        </span>
                     </div>
                 </div>
 
@@ -1404,9 +1481,9 @@
                             creates harmony and every turn reveals new sonic textures. An exploration of 
                             synesthesia in digital space.
                         </p>
-                        <a href="https://tabrischen.github.io/journey/index.html" target="_blank" rel="noopener noreferrer" class="project-link">
-                            Begin journey
-                            <span class="arrow">→</span>
+                        <a href="https://tabrischen.github.io/journey/index.html" target="_blank" rel="noopener noreferrer" class="project-link project-link-disabled">
+                            Coming Soon
+                            <span class="arrow">✨</span>
                         </a>
                     </div>
                 </div>
@@ -1425,10 +1502,10 @@
                             project weaves together ancient wisdom and emergent technology to envision 
                             futures that shimmer with possibility.
                         </p>
-                        <a href="#" class="project-link">
-                            View gallery
-                            <span class="arrow">→</span>
-                        </a>
+                        <span class="project-link project-link-disabled">
+                            Coming Soon
+                            <span class="arrow">✨</span>
+                        </span>
                     </div>
                 </div>
 
@@ -1446,10 +1523,30 @@
                             where biology and consciousness merge, questioning what it means to be human in a 
                             world of radical transformation.
                         </p>
-                        <a href="#" class="project-link">
-                            Enter the shimmer
-                            <span class="arrow">→</span>
-                        </a>
+                        <span class="project-link project-link-disabled">
+                            Coming Soon
+                            <span class="arrow">✨</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Experiment 5: CSS Zen Garden -->
+                <div class="project-card">
+                    <div class="project-image zen">
+                        <div class="project-icon">🪷</div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">CSS • Meditative</span>
+                        <h3>CSS Zen Garden</h3>
+                        <p class="project-description">
+                            A calm, meditative digital space designed to de-stress and inspire. Pure CSS 
+                            craftsmanship shapes a serene garden that breathes and flows — a quiet corner 
+                            of the internet to pause, exhale, and rediscover clarity.
+                        </p>
+                        <span class="project-link project-link-disabled">
+                            Coming Soon
+                            <span class="arrow">✨</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -1475,9 +1572,9 @@
                     <p class="about-label">About</p>
                     <h2 class="about-heading">Building at the edge of<br><em>what's possible.</em></h2>
                     <div class="about-body">
-                        <p>Born in Chengdu and raised in Singapore, Tabris has always existed between worlds — carrying the <em>wisdom</em> of the East and <em>the unique perspective</em> of a global upbringing. She crossed the ocean for her undergrad in Melbourne, before landing at Google Sydney, where she first tasted what it means to build technology at scale.</p>
-                        <p>Drawn by the pull of possibility, she spent four years in Silicon Valley startups — moving fast, thinking big, and learning how the future gets made before anyone else sees it coming. Then a different kind of edge called: three years at a Dutch deep tech company building augmented reality and machine learning tools for neurosurgery, where the stakes couldn't be higher and the technology couldn't be more human.</p>
-                        <p>Today she lives untethered as a digital nomad — no fixed address, infinite curiosity. She builds experimental interfaces, speculative systems, and tools that sit at the intersection of design, code, and consciousness.</p>
+                        <p>Born in <em>Chengdu</em> and raised in <em>Singapore</em>, Tabris has always existed between worlds — carrying the wisdom of the East and the unique perspective of a <em>global upbringing</em>. She crossed the ocean for her undergrad in Melbourne, before landing at <em>Google Sydney</em>, where she first tasted what it means to build technology at scale.</p>
+                        <p>Drawn by the pull of possibility, she spent four years in <em>Silicon Valley startups</em> — moving fast, thinking big, and learning how the future gets made before anyone else sees it coming. Then a different kind of edge called: three years at a Dutch deep tech company building <em>augmented reality</em> and <em>machine learning</em> tools for <em>neurosurgery</em>, where the stakes couldn't be higher and the technology couldn't be more human.</p>
+                        <p>Today she lives untethered as a digital nomad — no fixed address, <em>infinite curiosity</em>. She builds experimental interfaces, speculative systems, and tools that sit at the intersection of <em>design, code, and consciousness</em>.</p>
                     </div>
                 </div>
 
@@ -1485,7 +1582,7 @@
                     <div class="stat-item">
                         <div class="stat-icon">🐼</div>
                         <p class="stat-title">Chengdu → Singapore → The World</p>
-                        <p class="stat-desc">Born in China, raised in Singapore, educated in Australia — a perspective shaped by crossing borders from day one.</p>
+                        <p class="stat-desc">Born in China, raised in Singapore. Undergrad in Australia, Masters across France and the Netherlands — a life built on crossing borders.</p>
                     </div>
                     <div class="stat-item">
                         <div class="stat-icon">⚡</div>
@@ -1531,6 +1628,24 @@
             if (!e.target.closest('.nav-container')) {
                 mobileMenuBtn.classList.remove('active');
                 navLinks.classList.remove('active');
+            }
+        });
+
+        // Obfuscated email reveal - defeats bot harvesting
+        const emailParts = ['tabris', '.', 'chen', '@', 'gmail', '.', 'com'];
+        const contactLink = document.getElementById('contact-link');
+        const contactEmail = document.getElementById('contact-email');
+        let revealed = false;
+
+        contactLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!revealed) {
+                const email = emailParts.join('');
+                contactEmail.textContent = email;
+                contactLink.href = 'mailto:' + email;
+                revealed = true;
+            } else {
+                window.location.href = contactLink.href;
             }
         });
 
@@ -1688,6 +1803,26 @@
             observer.observe(card);
         });
     </script>
+
+    <!-- Section Divider -->
+    <div class="container">
+        <div class="section-divider"></div>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-inner">
+                <p class="about-label">Contact</p>
+                <h2 class="contact-heading">Let's build something<br><em>worth remembering.</em></h2>
+                <p class="contact-subtext">Whether you have a project in mind, want to collaborate, or simply want to say hello — I'd love to hear from you.</p>
+                <a class="contact-email-wrap" id="contact-link" href="#">
+                    <span class="contact-email-icon">✉️</span>
+                    <span class="contact-email-text" id="contact-email">Click to reveal email</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
