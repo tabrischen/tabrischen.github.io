@@ -83,104 +83,6 @@
             letter-spacing: -0.02em;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #ffffff;
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #ffffff;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Mobile Menu Toggle */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .menu-toggle span {
-            width: 25px;
-            height: 2px;
-            background: #ffffff;
-            transition: all 0.3s ease;
-        }
-
-        .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(7px, 7px);
-        }
-
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
-            }
-
-            .nav-links {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                flex-direction: column;
-                gap: 0;
-                background: rgba(255, 255, 255, 0.15);
-                backdrop-filter: blur(20px);
-                padding: 0;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
-            }
-
-            .nav-links.active {
-                max-height: 400px;
-            }
-
-            .nav-links a {
-                padding: 1.2rem 2rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .nav-links a::after {
-                display: none;
-            }
-        }
-
         /* Header Navigation */
         .header {
             position: fixed;
@@ -221,166 +123,6 @@
         .logo:hover {
             transform: scale(1.05);
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-        }
-
-        /* Mobile menu toggle */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        /* Responsive Navigation */
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                height: 100vh;
-                width: 70%;
-                max-width: 300px;
-                background: rgba(102, 126, 234, 0.95);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 5rem 2rem 2rem;
-                gap: 1.5rem;
-                transition: right 0.3s ease;
-                border-left: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .nav-links.active {
-                right: 0;
-            }
-
-            .nav-link {
-                width: 100%;
-                text-align: center;
-                padding: 1rem;
-                font-size: 1.1rem;
-            }
-        }
-
-        /* Header Navigation */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 1.5rem 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        header.scrolled {
-            padding: 1rem 0;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #ffffff;
-            text-decoration: none;
-            letter-spacing: -0.02em;
-        }
-
-        nav {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        nav a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #ffffff;
-            transition: width 0.3s ease;
-        }
-
-        nav a:hover {
-            color: #ffffff;
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        /* Mobile Navigation */
-        @media (max-width: 768px) {
-            nav {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                height: 100vh;
-                width: 70%;
-                max-width: 300px;
-                background: rgba(26, 26, 46, 0.98);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 6rem 2rem 2rem;
-                gap: 1.5rem;
-                align-items: flex-start;
-                transition: right 0.3s ease;
-                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
-            }
-
-            nav.active {
-                right: 0;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            nav a {
-                font-size: 1.1rem;
-                width: 100%;
-            }
         }
 
         /* Animated background particles */
@@ -817,6 +559,44 @@
         }
 
         /* Responsive */
+        /* Mobile menu button - hidden by default on desktop */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
         @media (max-width: 768px) {
             .mobile-menu-btn {
                 display: flex;
@@ -827,16 +607,17 @@
                 top: 0;
                 right: -100%;
                 height: 100vh;
-                width: 70%;
-                max-width: 300px;
-                background: rgba(102, 126, 234, 0.98);
-                backdrop-filter: blur(20px);
+                width: 75%;
+                max-width: 320px;
+                background: linear-gradient(160deg, rgba(118, 75, 162, 0.97), rgba(102, 126, 234, 0.97));
+                backdrop-filter: blur(30px);
                 flex-direction: column;
-                padding: 6rem 2rem 2rem;
-                gap: 2rem;
+                justify-content: center;
+                padding: 5rem 2.5rem 2.5rem;
+                gap: 2.5rem;
                 align-items: flex-start;
-                transition: right 0.3s ease;
-                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+                transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3);
                 z-index: 1000;
             }
 
@@ -845,8 +626,16 @@
             }
 
             .nav-link {
-                font-size: 1.2rem;
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-size: 1.8rem;
+                font-weight: 500;
                 width: 100%;
+                letter-spacing: 0.02em;
+            }
+
+            .nav-link::after {
+                bottom: -4px;
+                height: 1.5px;
             }
 
             /* Hide 3D canvas on mobile */
@@ -1226,44 +1015,6 @@
             opacity: 0.8;
         }
 
-        /* Mobile menu button */
-        .mobile-menu-btn {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            z-index: 1001;
-        }
-
-        .mobile-menu-btn span {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(7px, 7px);
-        }
-
-        .mobile-menu-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
         .nav-link {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
@@ -1283,8 +1034,8 @@
             bottom: -5px;
             left: 0;
             width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #f093fb, #764ba2, #667eea);
+            height: 1.5px;
+            background: rgba(255, 255, 255, 0.7);
             transition: width 0.3s ease;
         }
 
@@ -1292,40 +1043,6 @@
             width: 100%;
         }
 
-        /* Mobile menu toggle */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Responsive header */
-        @media (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                background: rgba(102, 126, 234, 0.95);
-                backdrop-filter: blur(20px);
-                padding: 2rem;
-                gap: 1.5rem;
-                transform: translateY(-150%);
-                transition: transform 0.3s ease;
-            }
-
-            .nav-links.active {
-                transform: translateY(0);
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-        }
     </style>
 </head>
 <body>
@@ -1572,9 +1289,10 @@
                     <p class="about-label">About</p>
                     <h2 class="about-heading">Building at the edge of<br><em>what's possible.</em></h2>
                     <div class="about-body">
-                        <p>Born in <em>Chengdu</em> and raised in <em>Singapore</em>, Tabris has always existed between worlds — carrying the wisdom of the East and the unique perspective of a <em>global upbringing</em>. She crossed the ocean for her undergrad in Melbourne, before landing at <em>Google Sydney</em>, where she first tasted what it means to build technology at scale.</p>
-                        <p>Drawn by the pull of possibility, she spent four years in <em>Silicon Valley startups</em> — moving fast, thinking big, and learning how the future gets made before anyone else sees it coming. Then a different kind of edge called: three years at a Dutch deep tech company building <em>augmented reality</em> and <em>machine learning</em> tools for <em>neurosurgery</em>, where the stakes couldn't be higher and the technology couldn't be more human.</p>
-                        <p>Today she lives untethered as a digital nomad — no fixed address, <em>infinite curiosity</em>. She builds experimental interfaces, speculative systems, and tools that sit at the intersection of <em>design, code, and consciousness</em>.</p>
+                        <p>Born in Chengdu and raised in Singapore, Tabris has always existed between worlds — East and West, logic and intuition, structure and imagination. She carries with her the wisdom of the East and the unique perspective of a <em>global upbringing</em>.</p>
+                        <p>She did her undergrads in Melbourne, before joining <em>Google Sydney</em>, where she first tasted what it means to build technology at scale. This is followed by four years of building softwares in <em>Silicon Valley startups</em>, moving fast, thinking boldly, and witnessing how the future is shaped long before it becomes visible.</p>
+                        <p>Her path then led to Europe, where she completed a double Master's degree in Computer Science across Paris and the Netherlands. After graduation, she joined a Dutch medtech startup, developing <em>Augmented Reality</em> and <em>Machine Learning</em> software for neurosurgery.</p>
+                        <p>Today she lives untethered — no fixed address, <em>infinite curiosity</em>. She builds experimental interfaces, speculative systems, and tools that sit at the intersection of design, code, and consciousness.</p>
                     </div>
                 </div>
 
