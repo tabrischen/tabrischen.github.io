@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snail's Journey - Through the Mycelium Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(20,10,30,0.95) 0%, rgba(5,2,10,0.98) 100%);
+            z-index: 1000;
+            transition: opacity 1.5s ease;
+        }
+
+        #ui-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .start-container {
+            text-align: center;
+            color: #fff;
+            max-width: 700px;
+            padding: 40px;
+        }
+
+        .title {
+            font-size: 64px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00ffcc 0%, #00ff88 30%, #ff00ff 70%, #00aaff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 30px rgba(0, 255, 204, 0.8)); 
+            }
+            50% { 
+                filter: drop-shadow(0 0 50px rgba(255, 0, 255, 1)); 
+            }
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #aaa;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .snail-emoji {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: bob 3s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #start-button {
+            margin-top: 30px;
+            padding: 25px 60px;
+            font-size: 24px;
+            background: linear-gradient(135deg, #00ffcc 0%, #00ff88 50%, #ff00ff 100%);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            box-shadow: 0 10px 50px rgba(0, 255, 204, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        #start-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 70px rgba(0, 255, 204, 0.9);
+        }
+
+        #score-display {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(0, 255, 204, 0.5);
+            text-align: center;
+            min-width: 150px;
+        }
+
+        #score-label {
+            font-size: 14px;
+            color: #00ffcc;
+            margin-bottom: 5px;
+        }
+
+        #score-value {
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
+        }
+
+        #score-feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            font-weight: bold;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+            text-shadow: 0 0 30px currentColor;
+        }
+
+        #score-feedback.show {
+            animation: scorePop 1s ease-out;
+        }
+
+        @keyframes scorePop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -80%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -120%) scale(0.8); }
+        }
+
+        #audio-player {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 204, 0.3);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #audio-player.visible {
+            opacity: 1;
+        }
+
+        .audio-btn {
+            background: linear-gradient(135deg, #00ffcc 0%, #00ff88 100%);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4);
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0, 255, 204, 0.6);
+        }
+
+        .audio-btn:active {
+            transform: scale(0.95);
+        }
+
+        #audio-info {
+            color: #fff;
+            max-width: 200px;
+        }
+
+        #audio-title {
+            font-size: 12px;
+            color: #00ffcc;
+            line-height: 1.4;
+        }
+
+        #info {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            text-align: center;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 204, 0.3);
+        }
+
+        #slime-trail {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to top, rgba(0, 255, 204, 0.2), transparent);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .glow-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <div id="ui-overlay">
+        <div class="start-container">
+            <h1 class="title">Snail's Journey</h1>
+            <div class="snail-emoji">🐌</div>
+            <p class="subtitle">
+                Steer through the bioluminescent forest<br>
+                Collect glowing orbs (+10 points) 🔮<br>
+                Avoid mushroom collisions (-5 points) 🍄
+            </p>
+            <button id="start-button">Begin Journey</button>
+        </div>
+    </div>
+
+    <div id="score-display">
+        <div id="score-label">SCORE</div>
+        <div id="score-value">0</div>
+    </div>
+
+    <div id="score-feedback"></div>
+
+    <div id="audio-player">
+        <button id="audio-toggle" class="audio-btn">
+            <span id="play-icon">⏸️</span>
+        </button>
+        <div id="audio-info">
+            <div id="audio-title">The Journey - Aevion (Oliver Heldens Edit)</div>
+        </div>
+    </div>
+
+    <div id="info" class="glow-pulse">
+        🖱️ Move mouse LEFT/RIGHT to steer • 🔮 Collect orbs • 🍄 Avoid mushrooms
+    </div>
+
+    <div id="slime-trail"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // Scene setup
+        let scene, camera, renderer;
+        let snail;
+        let mushrooms = [];
+        let orbs = [];
+        let lights = [];
+        
+        let time = 0;
+        let distance = 0;
+        let baseSpeed = 0.03;
+        let currentSpeed = baseSpeed;
+        let targetSpeed = baseSpeed;
+        let boosting = false;
+        
+        let mouseX = 0, mouseY = 0;
+        let cameraOffsetX = 0, cameraOffsetY = 0;
+        
+        let isRunning = false;
+        let lastTerrainZ = 0;
+        let chunkSize = 20;
+        let activeChunks = [];
+        
+        // Score system
+        let score = 0;
+        let collidedMushrooms = new Set();
+        let collectedOrbs = new Set();
+        
+        // Audio setup
+        let audio;
+        let isPlaying = false;
+        
+        const CONFIG = {
+            snailHeight: 0.3,
+            cameraHeight: 0.5,
+            cameraDistance: 2,
+            terrainWidth: 15,
+            maxSpeed: 0.8,
+            minSpeed: 0.05,
+            colors: {
+                mycelium: [0x00ffcc, 0x00ff88, 0xff00ff, 0x00aaff, 0xffaa00, 0xff0099],
+                mushrooms: [0xff0099, 0x00ffff, 0xffff00, 0x00ff00, 0xff00ff, 0xff6600, 0x00ffcc],
+                particles: [0x00ffcc, 0xff00ff, 0x00ff88, 0xffaa00],
+                orbs: [0xffff00, 0x00ffff, 0xff00ff, 0x00ff88]
+            }
+        };
+
+        function init() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0a0514, 0.015);
+            scene.background = new THREE.Color(0x0a0514);
+
+            camera = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 0.1, 200);
+            camera.position.set(0, CONFIG.cameraHeight, CONFIG.cameraDistance);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            setupAudio();
+            setupLighting();
+            createSnail();
+
+            for (let i = 0; i < 10; i++) {
+                generateTerrainChunk(lastTerrainZ);
+                lastTerrainZ -= chunkSize;
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('wheel', onMouseWheel);
+            document.addEventListener('keydown', onKeyDown);
+            document.addEventListener('keyup', onKeyUp);
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function setupAudio() {
+            audio = new Audio('https://raw.githubusercontent.com/tabrischen/tabrischen.github.io/master/audio/journey.mp3');
+            audio.loop = true;
+            audio.volume = 0.7;
+
+            document.getElementById('audio-toggle').addEventListener('click', () => {
+                if (isPlaying) {
+                    audio.pause();
+                    isPlaying = false;
+                    document.getElementById('play-icon').textContent = '▶️';
+                } else {
+                    audio.play().catch(e => console.log('Audio play failed'));
+                    isPlaying = true;
+                    document.getElementById('play-icon').textContent = '⏸️';
+                }
+            });
+        }
+
+        function setupLighting() {
+            scene.add(new THREE.AmbientLight(0x1a1a3e, 0.6));
+            
+            const moonlight = new THREE.DirectionalLight(0x4a5f8f, 0.4);
+            moonlight.position.set(0, 20, -10);
+            scene.add(moonlight);
+
+            const snailGlow = new THREE.PointLight(0x00ffcc, 3, 8);
+            scene.add(snailGlow);
+            lights.push({ light: snailGlow, type: 'snail' });
+
+            for (let i = 0; i < 6; i++) {
+                const light = new THREE.PointLight(CONFIG.colors.mycelium[i % CONFIG.colors.mycelium.length], 1.5, 15);
+                scene.add(light);
+                lights.push({ light: light, type: 'ambient', offset: (i / 6) * Math.PI * 2, radius: 8 });
+            }
+        }
+
+        function createSnail() {
+            const snailGroup = new THREE.Group();
+            
+            const shellGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+            const shellMaterial = new THREE.MeshStandardMaterial({
+                color: 0x00ffcc,
+                emissive: 0x00ffcc,
+                emissiveIntensity: 1.5
+            });
+            const shell = new THREE.Mesh(shellGeometry, shellMaterial);
+            shell.position.y = CONFIG.snailHeight;
+            snailGroup.add(shell);
+
+            const bodyGeometry = new THREE.CylinderGeometry(0.08, 0.1, 0.25, 8);
+            const bodyMaterial = new THREE.MeshStandardMaterial({
+                color: 0x00ff88,
+                emissive: 0x00ff88,
+                emissiveIntensity: 0.8,
+                transparent: true,
+                opacity: 0.7
+            });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.set(0, CONFIG.snailHeight - 0.1, 0.15);
+            body.rotation.x = Math.PI / 2;
+            snailGroup.add(body);
+
+            scene.add(snailGroup);
+            snail = { mesh: snailGroup, shell: shell, body: body };
+        }
+
+        function generateTerrainChunk(startZ) {
+            const chunk = { z: startZ, objects: [], mushrooms: [], orbs: [], cleanup: () => {
+                chunk.objects.forEach(obj => scene.remove(obj));
+            }};
+
+            // Ground
+            const pathGeom = new THREE.PlaneGeometry(CONFIG.terrainWidth, chunkSize);
+            const pathMat = new THREE.MeshStandardMaterial({ color: 0x1a472a, roughness: 0.9 });
+            const path = new THREE.Mesh(pathGeom, pathMat);
+            path.rotation.x = -Math.PI / 2;
+            path.position.z = startZ - chunkSize / 2;
+            scene.add(path);
+            chunk.objects.push(path);
+
+            // Mushrooms
+            const mushroomCount = 12 + Math.floor(Math.random() * 10);
+            for (let i = 0; i < mushroomCount; i++) {
+                const x = (Math.random() - 0.5) * CONFIG.terrainWidth * 0.9;
+                const z = startZ - Math.random() * chunkSize;
+                const mushroom = createMushroom();
+                mushroom.position.set(x, 0, z);
+                scene.add(mushroom);
+                chunk.objects.push(mushroom);
+                
+                const data = { mesh: mushroom, position: mushroom.position, radius: mushroom.userData.collisionRadius, id: `m_${startZ}_${i}` };
+                chunk.mushrooms.push(data);
+                mushrooms.push(data);
+            }
+
+            // Orbs
+            const orbCount = 8 + Math.floor(Math.random() * 8);
+            for (let i = 0; i < orbCount; i++) {
+                const x = (Math.random() - 0.5) * CONFIG.terrainWidth * 0.7;
+                const z = startZ - Math.random() * chunkSize;
+                const orb = createCollectibleOrb();
+                orb.position.set(x, 0.8, z);
+                scene.add(orb);
+                chunk.objects.push(orb);
+                
+                const data = { mesh: orb, position: orb.position, radius: 0.3, id: `o_${startZ}_${i}` };
+                chunk.orbs.push(data);
+                orbs.push(data);
+            }
+
+            activeChunks.push(chunk);
+        }
+
+        function createMushroom() {
+            const group = new THREE.Group();
+            const sizeVar = Math.random();
+            let height, capRad;
+            
+            if (sizeVar < 0.3) { height = 0.5; capRad = 0.4; }
+            else if (sizeVar < 0.6) { height = 2; capRad = 1.5; }
+            else if (sizeVar < 0.85) { height = 4; capRad = 3; }
+            else { height = 7; capRad = 5; }
+
+            const stem = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.1, 0.15, height),
+                new THREE.MeshStandardMaterial({ color: 0xf0f0f0 })
+            );
+            stem.position.y = height / 2;
+            group.add(stem);
+
+            const color = CONFIG.colors.mushrooms[Math.floor(Math.random() * CONFIG.colors.mushrooms.length)];
+            const cap = new THREE.Mesh(
+                new THREE.ConeGeometry(capRad, capRad * 0.7, 16),
+                new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 1, transparent: true, opacity: 0.9 })
+            );
+            cap.position.y = height + capRad * 0.35;
+            group.add(cap);
+
+            group.userData = { cap, material: cap.material, glowSpeed: 0.8, collisionRadius: capRad * 0.8 };
+            return group;
+        }
+
+        function createCollectibleOrb() {
+            const group = new THREE.Group();
+            const color = CONFIG.colors.orbs[Math.floor(Math.random() * CONFIG.colors.orbs.length)];
+            
+            const orb = new THREE.Mesh(
+                new THREE.SphereGeometry(0.25, 16, 16),
+                new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 2, transparent: true, opacity: 0.9 })
+            );
+            group.add(orb);
+
+            const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.35, 0.03, 8, 16),
+                new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 1.5, transparent: true, opacity: 0.6 })
+            );
+            ring.rotation.x = Math.PI / 2;
+            group.add(ring);
+
+            group.userData = { orb, ring, material: orb.material, ringMaterial: ring.material, pulseSpeed: 1.5, rotateSpeed: 1, baseY: 0 };
+            return group;
+        }
+
+        function updateScore(points) {
+            score += points;
+            document.getElementById('score-value').textContent = score;
+            
+            const feedback = document.getElementById('score-feedback');
+            feedback.textContent = points > 0 ? `+${points}` : points;
+            feedback.style.color = points > 0 ? '#00ff00' : '#ff0000';
+            feedback.className = 'show';
+            setTimeout(() => feedback.className = '', 1000);
+        }
+
+        function checkCollisions() {
+            const snailPos = snail.mesh.position;
+            const snailRadius = 0.25;
+            
+            mushrooms.forEach(m => {
+                if (collidedMushrooms.has(m.id)) return;
+                if (Math.abs(m.position.z - snailPos.z) < 5) {
+                    const dx = snailPos.x - m.position.x;
+                    const dz = snailPos.z - m.position.z;
+                    if (Math.sqrt(dx*dx + dz*dz) < snailRadius + m.radius) {
+                        collidedMushrooms.add(m.id);
+                        updateScore(-5);
+                        const mat = m.mesh.userData.material;
+                        const orig = mat.emissive.getHex();
+                        mat.emissive.setHex(0xff0000);
+                        setTimeout(() => mat.emissive.setHex(orig), 200);
+                    }
+                }
+            });
+            
+            orbs.forEach(o => {
+                if (collectedOrbs.has(o.id)) return;
+                if (Math.abs(o.position.z - snailPos.z) < 5) {
+                    const dx = snailPos.x - o.position.x;
+                    const dy = snailPos.y - o.position.y;
+                    const dz = snailPos.z - o.position.z;
+                    if (Math.sqrt(dx*dx + dy*dy + dz*dz) < snailRadius + o.radius) {
+                        collectedOrbs.add(o.id);
+                        updateScore(10);
+                        const scale = () => {
+                            o.mesh.scale.multiplyScalar(0.9);
+                            if (o.mesh.scale.x > 0.1) requestAnimationFrame(scale);
+                            else scene.remove(o.mesh);
+                        };
+                        scale();
+                    }
+                }
+            });
+        }
+
+        function onMouseMove(e) { mouseX = (e.clientX / window.innerWidth) * 2 - 1; mouseY = -(e.clientY / window.innerHeight) * 2 + 1; }
+        function onMouseWheel(e) { targetSpeed += e.deltaY * -0.001; targetSpeed = Math.max(CONFIG.minSpeed, Math.min(CONFIG.maxSpeed, targetSpeed)); }
+        function onKeyDown(e) { if (e.code === 'Space') { boosting = true; targetSpeed = CONFIG.maxSpeed; }}
+        function onKeyUp(e) { if (e.code === 'Space') { boosting = false; targetSpeed = baseSpeed; }}
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
+
+        function animate() {
+            if (!isRunning) return;
+            requestAnimationFrame(animate);
+
+            time += 0.016;
+            currentSpeed += (targetSpeed - currentSpeed) * 0.05;
+            distance += currentSpeed;
+
+            cameraOffsetX += (mouseX * 1.5 - cameraOffsetX) * 0.05;
+            cameraOffsetY += (mouseY * 0.8 - cameraOffsetY) * 0.05;
+            
+            const targetSnailX = mouseX * 5;
+            snail.mesh.position.x += (targetSnailX - snail.mesh.position.x) * 0.08;
+            snail.mesh.position.x = Math.max(-CONFIG.terrainWidth / 2 + 1, Math.min(CONFIG.terrainWidth / 2 - 1, snail.mesh.position.x));
+
+            camera.position.z -= currentSpeed;
+            snail.mesh.position.z -= currentSpeed;
+            camera.position.x = snail.mesh.position.x + cameraOffsetX * 0.5;
+            camera.position.y = CONFIG.cameraHeight + cameraOffsetY;
+            camera.lookAt(snail.mesh.position.x + cameraOffsetX * 0.3, CONFIG.snailHeight + cameraOffsetY * 0.3, camera.position.z - 5);
+
+            checkCollisions();
+
+            lights.forEach(l => {
+                if (l.type === 'snail') {
+                    l.light.position.copy(snail.mesh.position);
+                    l.light.position.y = CONFIG.snailHeight;
+                    l.light.intensity = 2.5 + Math.sin(time * 3) * 0.5;
+                } else {
+                    const a = l.offset + time * 0.5;
+                    l.light.position.set(snail.mesh.position.x + Math.cos(a) * l.radius, 2 + Math.sin(time + l.offset), snail.mesh.position.z + Math.sin(a) * l.radius);
+                }
+            });
+
+            snail.shell.rotation.y += 0.02;
+            snail.shell.position.y = CONFIG.snailHeight + Math.sin(time * 2) * 0.02;
+
+            scene.traverse(obj => {
+                if (obj.userData.cap) {
+                    obj.userData.material.emissiveIntensity = 0.7 + Math.sin(time * obj.userData.glowSpeed) * 0.5;
+                }
+                if (obj.userData.orb) {
+                    const p = Math.sin(time * obj.userData.pulseSpeed);
+                    obj.userData.material.emissiveIntensity = 1.5 + p * 0.8;
+                    obj.userData.ring.rotation.z += 0.01 * obj.userData.rotateSpeed;
+                    obj.position.y = obj.userData.baseY + p * 0.2;
+                }
+            });
+
+            if (camera.position.z < lastTerrainZ + chunkSize * 2) {
+                generateTerrainChunk(lastTerrainZ);
+                lastTerrainZ -= chunkSize;
+            }
+
+            activeChunks = activeChunks.filter(chunk => {
+                if (chunk.z > camera.position.z + chunkSize * 3) {
+                    mushrooms = mushrooms.filter(m => !chunk.mushrooms.includes(m));
+                    orbs = orbs.filter(o => !chunk.orbs.includes(o));
+                    chunk.cleanup();
+                    return false;
+                }
+                return true;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        document.getElementById('start-button').addEventListener('click', () => {
+            document.getElementById('ui-overlay').classList.add('hidden');
+            document.getElementById('audio-player').classList.add('visible');
+            audio.play().then(() => {
+                isPlaying = true;
+                document.getElementById('play-icon').textContent = '⏸️';
+            }).catch(() => {
+                document.getElementById('play-icon').textContent = '▶️';
+            });
+            isRunning = true;
+            animate();
+        });
+
+        init();
+    </script>
+</body>
+</html>
