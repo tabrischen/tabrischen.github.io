@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snail's Journey - Through the Mycelium Network</title>
+    <title>Snail's Forest Odyssey - Mycelium Network Explorer</title>
     <style>
         * {
             margin: 0;
@@ -15,6 +15,7 @@
             font-family: 'Courier New', monospace;
             overflow: hidden;
             background: #000;
+            cursor: none;
         }
 
         #canvas-container {
@@ -110,56 +111,31 @@
             box-shadow: 0 20px 70px rgba(0, 255, 204, 0.9);
         }
 
-        #score-display {
+        .instructions {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .instructions strong {
+            color: #00ffcc;
+        }
+
+        #hud {
             position: absolute;
             top: 20px;
             left: 20px;
-            color: #fff;
-            font-size: 32px;
-            font-weight: bold;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             padding: 20px 30px;
             border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 3px solid rgba(0, 255, 204, 0.5);
-            text-align: center;
-            min-width: 150px;
-        }
-
-        #score-label {
-            font-size: 14px;
-            color: #00ffcc;
-            margin-bottom: 5px;
-        }
-
-        #score-value {
-            font-size: 48px;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
-        }
-
-        #score-feedback {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 80px;
-            font-weight: bold;
-            pointer-events: none;
-            opacity: 0;
+            backdrop-filter: blur(15px);
+            border: 3px solid rgba(0, 255, 136, 0.4);
             z-index: 100;
-            text-shadow: 0 0 30px currentColor;
-        }
-
-        #score-feedback.show {
-            animation: scorePop 1s ease-out;
-        }
-
-        @keyframes scorePop {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            50% { opacity: 1; transform: translate(-50%, -80%) scale(1.2); }
-            100% { opacity: 0; transform: translate(-50%, -120%) scale(0.8); }
+            color: #fff;
+            font-size: 18px;
+            min-width: 250px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
         #audio-player {
@@ -169,12 +145,12 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(0, 255, 204, 0.3);
-            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 3px solid rgba(0, 255, 204, 0.4);
+            z-index: 100;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -186,470 +162,1700 @@
         .audio-btn {
             background: linear-gradient(135deg, #00ffcc 0%, #00ff88 100%);
             border: none;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.5);
+            color: #000;
         }
 
         .audio-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(0, 255, 204, 0.6);
+            box-shadow: 0 6px 25px rgba(0, 255, 204, 0.8);
         }
 
         .audio-btn:active {
             transform: scale(0.95);
         }
 
-        #audio-info {
+        .audio-info {
             color: #fff;
-            max-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        #audio-title {
-            font-size: 12px;
+        .audio-title {
+            font-size: 14px;
             color: #00ffcc;
-            line-height: 1.4;
+            font-weight: bold;
         }
 
-        #info {
+        .audio-status {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .hud-item {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hud-label {
+            color: #aaffaa;
+            font-weight: bold;
+        }
+
+        .hud-value {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .health-bar-container {
+            margin-top: 5px;
+            width: 100%;
+            height: 20px;
+            background: rgba(50, 50, 50, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .health-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0044 0%, #ff3377 50%, #ff0088 100%);
+            transition: width 0.3s ease, background 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 68, 0.6);
+        }
+
+        .health-bar.high {
+            background: linear-gradient(90deg, #00ff88 0%, #00ffcc 50%, #00ff88 100%);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .health-bar.medium {
+            background: linear-gradient(90deg, #ffaa00 0%, #ffcc00 50%, #ffaa00 100%);
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.6);
+        }
+
+        .health-bar.low {
+            background: linear-gradient(90deg, #ff0044 0%, #ff3377 50%, #ff0088 100%);
+            box-shadow: 0 0 10px rgba(255, 0, 68, 0.6);
+        }
+
+        .health-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        .points-positive {
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+        }
+
+        .points-negative {
+            color: #ff4444;
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+        }
+
+        #speed-indicator {
             position: absolute;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 14px;
-            text-align: center;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             padding: 15px 30px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(0, 255, 204, 0.3);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+            font-size: 16px;
+            z-index: 100;
         }
 
-        #slime-trail {
+        #custom-cursor {
             position: absolute;
-            bottom: 0;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #00ff88;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6), inset 0 0 10px rgba(0, 255, 136, 0.3);
+            transition: all 0.1s ease;
+        }
+
+        #custom-cursor::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+        }
+
+        .collision-flash {
+            position: absolute;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 50px;
-            background: linear-gradient(to top, rgba(0, 255, 204, 0.2), transparent);
+            height: 100%;
             pointer-events: none;
-            z-index: 5;
+            z-index: 999;
+            opacity: 0;
         }
 
-        .glow-pulse {
-            animation: pulse 2s ease-in-out infinite;
+        .collision-flash.hit {
+            background: rgba(255, 0, 0, 0.3);
+            animation: flash-red 0.3s ease;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
+        .collision-flash.collect {
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.4) 0%, transparent 70%);
+            animation: flash-green 0.5s ease;
+        }
+
+        @keyframes flash-red {
+            0%, 100% { opacity: 0; }
             50% { opacity: 1; }
+        }
+
+        @keyframes flash-green {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.8; }
+        }
+
+        .floating-text {
+            position: absolute;
+            font-size: 36px;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1000;
+            animation: float-up 1s ease forwards;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+
+        #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            flex-direction: column;
+            color: #fff;
+        }
+
+        #game-over.show {
+            display: flex;
+        }
+
+        .game-over-title {
+            font-size: 64px;
+            color: #00ff88;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+        }
+
+        .final-score {
+            font-size: 48px;
+            margin-bottom: 40px;
+        }
+
+        #restart-button {
+            padding: 20px 50px;
+            font-size: 24px;
+            background: linear-gradient(135deg, #00ff88 0%, #00ffcc 100%);
+            color: #003300;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        #restart-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(0, 255, 136, 0.9);
         }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
+    <div id="custom-cursor"></div>
+    <div class="collision-flash" id="collision-flash"></div>
 
     <div id="ui-overlay">
         <div class="start-container">
-            <h1 class="title">Snail's Journey</h1>
+            <h1 class="title">Erik's Journey</h1>
             <div class="snail-emoji">🐌</div>
             <p class="subtitle">
-                Steer through the bioluminescent forest<br>
-                Collect glowing orbs (+10 points) 🔮<br>
-                Avoid mushroom collisions (-5 points) 🍄
+                Help Erik get home<br>
+                Avoid poisonous mushrooms<br>
+                Collect orbs for extra points
             </p>
+            <div class="instructions">
+                <strong>Move your mouse</strong> to guide the snail through the forest<br>
+                <strong>Collect glowing orbs</strong> (+50 points each)<br>
+                <strong>Avoid mushrooms:</strong> Small (-5 HP), Medium (-10 HP), Large (-30 HP)<br>
+                <strong>Don't let your health reach zero!</strong>
+            </div>
             <button id="start-button">Begin Journey</button>
         </div>
     </div>
 
-    <div id="score-display">
-        <div id="score-label">SCORE</div>
-        <div id="score-value">0</div>
+    <div id="hud">
+        <div class="hud-item">
+            <span class="hud-label">HEALTH:</span>
+            <span class="hud-value" id="health" style="color: #00ff88;">100</span>
+        </div>
+        <div class="health-bar-container">
+            <div class="health-bar high" id="health-bar" style="width: 100%;"></div>
+            <div class="health-text" id="health-text">100 / 100</div>
+        </div>
+        <div class="hud-item" style="margin-top: 15px;">
+            <span class="hud-label">SCORE:</span>
+            <span class="hud-value points-positive" id="score">0</span>
+        </div>
+        <div class="hud-item">
+            <span class="hud-label">DISTANCE:</span>
+            <span class="hud-value" id="distance" style="color: #00ffcc;">0m</span>
+        </div>
+        <div class="hud-item">
+            <span class="hud-label">SPEED:</span>
+            <span class="hud-value" id="speed" style="color: #88ff00;">1.5x</span>
+        </div>
     </div>
-
-    <div id="score-feedback"></div>
 
     <div id="audio-player">
         <button id="audio-toggle" class="audio-btn">
             <span id="play-icon">⏸️</span>
         </button>
-        <div id="audio-info">
-            <div id="audio-title">The Journey - Aevion (Oliver Heldens Edit)</div>
+        <div class="audio-info">
+            <div class="audio-title">Journey</div>
+            <div class="audio-status" id="audio-status">Playing...</div>
         </div>
     </div>
 
-    <div id="info" class="glow-pulse">
-        🖱️ Move mouse LEFT/RIGHT to steer • 🔮 Collect orbs • 🍄 Avoid mushrooms
+    <div id="game-over">
+        <div class="game-over-title">Game Over</div>
+        <div style="font-size: 24px; color: #ff6666; margin-bottom: 20px;">Too bad, Erik didn't make it this time.</div>
+        <div class="final-score">Final Score: <span id="final-score">0</span></div>
+        <button id="restart-button">Explore Again</button>
     </div>
 
-    <div id="slime-trail"></div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
     <script>
-        // Scene setup
         let scene, camera, renderer;
-        let snail;
-        let mushrooms = [];
-        let orbs = [];
-        let lights = [];
-        
+        let snail, lights = [];
+        let mouseX = 0, mouseY = 0;
+        let isRunning = false;
         let time = 0;
         let distance = 0;
-        let baseSpeed = 0.03;
-        let currentSpeed = baseSpeed;
-        let targetSpeed = baseSpeed;
-        let boosting = false;
-        
-        let mouseX = 0, mouseY = 0;
-        let cameraOffsetX = 0, cameraOffsetY = 0;
-        
-        let isRunning = false;
-        let lastTerrainZ = 0;
-        let chunkSize = 20;
-        let activeChunks = [];
-        
-        // Score system
         let score = 0;
-        let collidedMushrooms = new Set();
-        let collectedOrbs = new Set();
-        
+        let health = 100; // Add health variable
+        let currentSpeed = 0.075; // Start at 1.5x base speed
+        let targetSpeed = 0.075; // Start at 1.5x base speed
+        const baseSpeed = 0.05;
+        let speedMultiplier = 1.5; // Start at 1.5x speed
+
         // Audio setup
-        let audio;
+        const audio = new Audio('https://raw.githubusercontent.com/tabrischen/tabrischen.github.io/master/audio/journey.mp3');
+        audio.loop = true;
+        audio.volume = 0.5;
         let isPlaying = false;
-        
+
+        let activeChunks = [];
+        let lastTerrainZ = 0;
+        const chunkSize = 100;
+        let collidableObjects = [];
+        let collectibles = [];
+
         const CONFIG = {
+            terrainWidth: 30,
+            cameraHeight: 2,
             snailHeight: 0.3,
-            cameraHeight: 0.5,
-            cameraDistance: 2,
-            terrainWidth: 15,
-            maxSpeed: 0.8,
-            minSpeed: 0.05,
-            colors: {
-                mycelium: [0x00ffcc, 0x00ff88, 0xff00ff, 0x00aaff, 0xffaa00, 0xff0099],
-                mushrooms: [0xff0099, 0x00ffff, 0xffff00, 0x00ff00, 0xff00ff, 0xff6600, 0x00ffcc],
-                particles: [0x00ffcc, 0xff00ff, 0x00ff88, 0xffaa00],
-                orbs: [0xffff00, 0x00ffff, 0xff00ff, 0x00ff88]
-            }
+            minSpeed: 0.02,
+            maxSpeed: 0.3,
+            accelerationRate: 0.001
         };
+
+        // Custom cursor
+        const customCursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = e.clientX + 'px';
+            customCursor.style.top = e.clientY + 'px';
+        });
+
+        // Mouse movement tracking
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
 
         function init() {
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x0a0514, 0.015);
-            scene.background = new THREE.Color(0x0a0514);
+            scene.fog = new THREE.FogExp2(0x001a0a, 0.02);
 
-            camera = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 0.1, 200);
-            camera.position.set(0, CONFIG.cameraHeight, CONFIG.cameraDistance);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, CONFIG.cameraHeight, 5);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            setupAudio();
-            setupLighting();
             createSnail();
+            createLights();
+            createGround();
 
-            for (let i = 0; i < 10; i++) {
+            // Generate initial terrain
+            for (let i = 0; i < 5; i++) {
                 generateTerrainChunk(lastTerrainZ);
                 lastTerrainZ -= chunkSize;
             }
 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('wheel', onMouseWheel);
-            document.addEventListener('keydown', onKeyDown);
-            document.addEventListener('keyup', onKeyUp);
             window.addEventListener('resize', onWindowResize);
         }
 
-        function setupAudio() {
-            audio = new Audio('https://raw.githubusercontent.com/tabrischen/tabrischen.github.io/master/audio/journey.mp3');
-            audio.loop = true;
-            audio.volume = 0.7;
-
-            document.getElementById('audio-toggle').addEventListener('click', () => {
-                if (isPlaying) {
-                    audio.pause();
-                    isPlaying = false;
-                    document.getElementById('play-icon').textContent = '▶️';
-                } else {
-                    audio.play().catch(e => console.log('Audio play failed'));
-                    isPlaying = true;
-                    document.getElementById('play-icon').textContent = '⏸️';
-                }
-            });
-        }
-
-        function setupLighting() {
-            scene.add(new THREE.AmbientLight(0x1a1a3e, 0.6));
-            
-            const moonlight = new THREE.DirectionalLight(0x4a5f8f, 0.4);
-            moonlight.position.set(0, 20, -10);
-            scene.add(moonlight);
-
-            const snailGlow = new THREE.PointLight(0x00ffcc, 3, 8);
-            scene.add(snailGlow);
-            lights.push({ light: snailGlow, type: 'snail' });
-
-            for (let i = 0; i < 6; i++) {
-                const light = new THREE.PointLight(CONFIG.colors.mycelium[i % CONFIG.colors.mycelium.length], 1.5, 15);
-                scene.add(light);
-                lights.push({ light: light, type: 'ambient', offset: (i / 6) * Math.PI * 2, radius: 8 });
-            }
-        }
-
         function createSnail() {
-            const snailGroup = new THREE.Group();
-            
-            const shellGeometry = new THREE.SphereGeometry(0.15, 16, 16);
-            const shellMaterial = new THREE.MeshStandardMaterial({
-                color: 0x00ffcc,
-                emissive: 0x00ffcc,
-                emissiveIntensity: 1.5
-            });
-            const shell = new THREE.Mesh(shellGeometry, shellMaterial);
-            shell.position.y = CONFIG.snailHeight;
-            snailGroup.add(shell);
+            snail = { mesh: new THREE.Group() };
 
-            const bodyGeometry = new THREE.CylinderGeometry(0.08, 0.1, 0.25, 8);
+            // Body
+            const bodyGeometry = new THREE.SphereGeometry(0.3, 16, 16);
             const bodyMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffaa66,
+                emissive: 0xff6600,
+                emissiveIntensity: 0.5,
+                roughness: 0.7,
+                metalness: 0.2
+            });
+            snail.body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            snail.body.scale.set(1, 0.6, 1.2);
+            snail.body.castShadow = true;
+
+            // Shell
+            const shellGeometry = new THREE.SphereGeometry(0.35, 16, 16);
+            const shellMaterial = new THREE.MeshStandardMaterial({
                 color: 0x00ff88,
                 emissive: 0x00ff88,
                 emissiveIntensity: 0.8,
-                transparent: true,
-                opacity: 0.7
+                roughness: 0.3,
+                metalness: 0.6
             });
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.position.set(0, CONFIG.snailHeight - 0.1, 0.15);
-            body.rotation.x = Math.PI / 2;
-            snailGroup.add(body);
+            snail.shell = new THREE.Mesh(shellGeometry, shellMaterial);
+            snail.shell.position.set(0, 0.1, -0.1);
+            snail.shell.castShadow = true;
 
-            scene.add(snailGroup);
-            snail = { mesh: snailGroup, shell: shell, body: body };
+            // Antennae
+            const antennaGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8);
+            const antennaMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffaa66,
+                emissive: 0xff6600,
+                emissiveIntensity: 0.3
+            });
+
+            const antenna1 = new THREE.Mesh(antennaGeometry, antennaMaterial);
+            antenna1.position.set(-0.15, 0.3, 0.2);
+            antenna1.rotation.z = -0.3;
+
+            const antenna2 = new THREE.Mesh(antennaGeometry, antennaMaterial);
+            antenna2.position.set(0.15, 0.3, 0.2);
+            antenna2.rotation.z = 0.3;
+
+            // Eye bulbs
+            const eyeGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            const eyeMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                emissive: 0x00ff88,
+                emissiveIntensity: 1
+            });
+
+            const eye1 = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            eye1.position.set(-0.15, 0.45, 0.2);
+
+            const eye2 = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            eye2.position.set(0.15, 0.45, 0.2);
+
+            snail.mesh.add(snail.body);
+            snail.mesh.add(snail.shell);
+            snail.mesh.add(antenna1);
+            snail.mesh.add(antenna2);
+            snail.mesh.add(eye1);
+            snail.mesh.add(eye2);
+
+            snail.mesh.position.set(0, CONFIG.snailHeight, 0);
+            scene.add(snail.mesh);
+        }
+
+        function createLights() {
+            const ambientLight = new THREE.AmbientLight(0x112211, 0.3);
+            scene.add(ambientLight);
+
+            // Snail spotlight
+            const snailLight = new THREE.PointLight(0x00ff88, 3, 15);
+            snailLight.castShadow = true;
+            snailLight.shadow.mapSize.width = 1024;
+            snailLight.shadow.mapSize.height = 1024;
+            scene.add(snailLight);
+            lights.push({ light: snailLight, type: 'snail' });
+
+            // Atmospheric lights
+            for (let i = 0; i < 6; i++) {
+                const light = new THREE.PointLight(
+                    [0x00ff88, 0x88ff00, 0x00ffcc, 0xffaa00][Math.floor(Math.random() * 4)],
+                    1.5,
+                    20
+                );
+                scene.add(light);
+                lights.push({
+                    light: light,
+                    type: 'ambient',
+                    radius: 10 + Math.random() * 15,
+                    offset: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function createGround() {
+            const groundGeometry = new THREE.PlaneGeometry(CONFIG.terrainWidth, 500);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x0a1a0a,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.1;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Add mycelium network to ground with rainbow gradients
+            for (let i = 0; i < 200; i++) {
+                const points = [];
+                const startX = (Math.random() - 0.5) * CONFIG.terrainWidth;
+                const startZ = Math.random() * -200;
+                
+                for (let j = 0; j < 5; j++) {
+                    points.push(new THREE.Vector3(
+                        startX + (Math.random() - 0.5) * 3,
+                        0.02,
+                        startZ + j * 2 + (Math.random() - 0.5)
+                    ));
+                }
+
+                const curve = new THREE.CatmullRomCurve3(points);
+                const tubeGeometry = new THREE.TubeGeometry(curve, 20, 0.02, 8, false);
+                
+                // Rainbow gradient colors - subtle and varied
+                const rainbowColors = [
+                    0xff0099, // Magenta-pink
+                    0xff00ff, // Magenta
+                    0x8800ff, // Purple
+                    0x0088ff, // Blue
+                    0x00ffcc, // Cyan
+                    0x00ff88, // Teal-green
+                    0x88ff00, // Yellow-green
+                    0xffaa00, // Orange
+                ];
+                
+                const randomColor = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+                
+                const tubeMaterial = new THREE.MeshStandardMaterial({
+                    color: randomColor,
+                    emissive: randomColor,
+                    emissiveIntensity: 0.3 + Math.random() * 0.2,
+                    transparent: true,
+                    opacity: 0.4 + Math.random() * 0.2
+                });
+
+                const tube = new THREE.Mesh(tubeGeometry, tubeMaterial);
+                tube.userData.isStrand = true;
+                tube.userData.pulseSpeed = 0.5 + Math.random();
+                tube.userData.pulseOffset = Math.random() * Math.PI * 2;
+                tube.userData.baseIntensity = 0.3 + Math.random() * 0.2;
+                tube.userData.baseOpacity = 0.4 + Math.random() * 0.2;
+                tube.userData.material = tubeMaterial;
+                scene.add(tube);
+            }
+        }
+
+        function createTree(x, z) {
+            const tree = new THREE.Group();
+
+            // More varied stem dimensions
+            const stemHeight = 2.5 + Math.random() * 2.5;
+            const stemBottomRadius = 0.25 + Math.random() * 0.2;
+            const stemTopRadius = 0.2 + Math.random() * 0.15;
+            const stemSegments = 10 + Math.floor(Math.random() * 6);
+            
+            const stemGeometry = new THREE.CylinderGeometry(stemTopRadius, stemBottomRadius, stemHeight, stemSegments);
+            const stemMaterial = new THREE.MeshStandardMaterial({
+                color: 0xddddbb,
+                emissive: 0x887766,
+                emissiveIntensity: 0.2,
+                roughness: 0.8
+            });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.position.y = stemHeight / 2;
+            stem.castShadow = true;
+            stem.receiveShadow = true;
+
+            // Much more varied cap shapes and sizes
+            const capStyle = Math.random();
+            let cap;
+            const capSize = 1.2 + Math.random() * 1.2;
+            
+            const mushroomTypes = [
+                { color: 0xff0099, emissive: 0xff0099 }, // Hot magenta-pink
+                { color: 0x00ffff, emissive: 0x00ffff }, // Bright cyan
+                { color: 0xffff00, emissive: 0xffff00 }, // Electric yellow
+                { color: 0x00ff00, emissive: 0x00ff00 }, // Neon green
+                { color: 0xff00ff, emissive: 0xff00ff }, // Pure magenta
+                { color: 0xff6600, emissive: 0xff6600 }, // Vibrant orange
+                { color: 0x00ffcc, emissive: 0x00ffcc }, // Cyan-green
+                { color: 0xff0088, emissive: 0xff0088 }, // Pink-red
+                { color: 0x00ff88, emissive: 0x00ff88 }, // Teal-green
+                { color: 0xffaa00, emissive: 0xffaa00 }, // Golden orange
+            ];
+            
+            const type = mushroomTypes[Math.floor(Math.random() * mushroomTypes.length)];
+            
+            const capMaterial = new THREE.MeshStandardMaterial({
+                color: type.color,
+                emissive: type.emissive,
+                emissiveIntensity: 0.8 + Math.random() * 0.7,
+                roughness: 0.4,
+                metalness: 0.3,
+                transparent: true,
+                opacity: 0.9
+            });
+            
+            if (capStyle < 0.25) {
+                // Wide flat dome
+                const capGeometry = new THREE.SphereGeometry(capSize, 16, 16);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+                cap.scale.set(1, 0.3 + Math.random() * 0.2, 1);
+            } else if (capStyle < 0.5) {
+                // Classic dome shape
+                const capGeometry = new THREE.SphereGeometry(capSize, 16, 16);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+                cap.scale.set(1, 0.5 + Math.random() * 0.3, 1);
+            } else if (capStyle < 0.75) {
+                // Umbrella shape - flat top with rounded edges
+                const capGeometry = new THREE.CylinderGeometry(capSize * 0.8, capSize * 1.1, capSize * 0.5, 16);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+            } else {
+                // Conical/pointed cap
+                const capGeometry = new THREE.ConeGeometry(capSize, capSize * 0.9, 16);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+            }
+
+            cap.position.y = stemHeight + capSize * 0.4;
+            cap.castShadow = true;
+            cap.receiveShadow = true;
+
+            // Add varied gills under the cap
+            const gillsRadius = capSize * (0.9 + Math.random() * 0.15);
+            const gillsGeometry = new THREE.CylinderGeometry(gillsRadius, gillsRadius, 0.08 + Math.random() * 0.08, 16);
+            const gillsMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                emissive: type.emissive,
+                emissiveIntensity: 0.3,
+                roughness: 0.7,
+                opacity: 0.75 + Math.random() * 0.15,
+                transparent: true
+            });
+            const gills = new THREE.Mesh(gillsGeometry, gillsMaterial);
+            gills.position.y = stemHeight + capSize * 0.1;
+
+            // Add glowing spots with more variation
+            const numSpots = 4 + Math.floor(Math.random() * 6);
+            for (let i = 0; i < numSpots; i++) {
+                const spotSize = 0.08 + Math.random() * 0.2;
+                const spotGeometry = new THREE.SphereGeometry(spotSize, 8, 8);
+                
+                // Psychedelic spot colors - vibrant complementary colors
+                const spotColors = [0xffffff, 0xffff00, 0x00ffff, 0xff00ff, 0x00ff00, 0xff0099];
+                const spotColor = spotColors[Math.floor(Math.random() * spotColors.length)];
+                
+                const spotMaterial = new THREE.MeshStandardMaterial({
+                    color: spotColor,
+                    emissive: spotColor,
+                    emissiveIntensity: 1.5 + Math.random() * 0.8,
+                    transparent: true,
+                    opacity: 0.85 + Math.random() * 0.15
+                });
+                const spot = new THREE.Mesh(spotGeometry, spotMaterial);
+                const angle = (i / numSpots) * Math.PI * 2 + Math.random() * 0.5;
+                const radius = capSize * (0.4 + Math.random() * 0.4);
+                spot.position.set(
+                    Math.cos(angle) * radius,
+                    stemHeight + capSize * (0.4 + Math.random() * 0.2),
+                    Math.sin(angle) * radius
+                );
+                tree.add(spot);
+            }
+
+            tree.add(stem);
+            tree.add(cap);
+            tree.add(gills);
+            tree.position.set(x, 0, z);
+
+            tree.userData.swaySpeed = 0.3 + Math.random() * 0.4;
+            tree.userData.swayAmount = 0.03 + Math.random() * 0.03;
+            tree.userData.material = capMaterial;
+            tree.userData.cap = cap;
+            tree.userData.glowSpeed = 1 + Math.random() * 1.5;
+
+            return tree;
+        }
+
+        function createGiganticTree(x, z) {
+            const tree = new THREE.Group();
+
+            // Massive trunk
+            const trunkHeight = 15 + Math.random() * 10;
+            const trunkBottomRadius = 1 + Math.random() * 0.5;
+            const trunkTopRadius = 0.8 + Math.random() * 0.4;
+            
+            const trunkGeometry = new THREE.CylinderGeometry(trunkTopRadius, trunkBottomRadius, trunkHeight, 16);
+            const trunkMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3a2a1a,
+                emissive: 0x1a0a05,
+                emissiveIntensity: 0.1,
+                roughness: 0.9,
+                metalness: 0.05
+            });
+            const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+            trunk.position.y = trunkHeight / 2;
+            trunk.castShadow = true;
+            trunk.receiveShadow = true;
+
+            // Add bark texture with bumps
+            for (let i = 0; i < 8; i++) {
+                const bumpHeight = Math.random() * 2 + 1;
+                const bumpGeometry = new THREE.SphereGeometry(0.3 + Math.random() * 0.3, 8, 8);
+                const bump = new THREE.Mesh(bumpGeometry, trunkMaterial);
+                const angle = (i / 8) * Math.PI * 2;
+                const heightPos = trunkHeight * (0.2 + Math.random() * 0.6);
+                bump.position.set(
+                    Math.cos(angle) * trunkBottomRadius * 0.9,
+                    heightPos,
+                    Math.sin(angle) * trunkBottomRadius * 0.9
+                );
+                bump.scale.set(1, 2 + Math.random(), 1);
+                tree.add(bump);
+            }
+
+            // Massive canopy
+            const canopyHeight = trunkHeight + 3;
+            const canopySize = 5 + Math.random() * 3;
+            
+            // Main canopy sphere
+            const canopyGeometry = new THREE.SphereGeometry(canopySize, 16, 16);
+            const canopyMaterial = new THREE.MeshStandardMaterial({
+                color: 0x0a3a0a,
+                emissive: 0x003300,
+                emissiveIntensity: 0.2,
+                roughness: 0.8,
+                metalness: 0.1
+            });
+            const canopy = new THREE.Mesh(canopyGeometry, canopyMaterial);
+            canopy.position.y = canopyHeight;
+            canopy.scale.set(1, 0.8, 1);
+            canopy.castShadow = true;
+            canopy.receiveShadow = true;
+
+            // Add multiple layers of foliage
+            for (let i = 0; i < 4; i++) {
+                const layerSize = canopySize * (0.6 + Math.random() * 0.4);
+                const layerGeometry = new THREE.SphereGeometry(layerSize, 12, 12);
+                const layer = new THREE.Mesh(layerGeometry, canopyMaterial);
+                const angle = (i / 4) * Math.PI * 2 + Math.random();
+                const radius = canopySize * 0.5;
+                layer.position.set(
+                    Math.cos(angle) * radius,
+                    canopyHeight + (Math.random() - 0.5) * canopySize * 0.5,
+                    Math.sin(angle) * radius
+                );
+                layer.scale.set(0.8, 0.6, 0.8);
+                layer.castShadow = true;
+                tree.add(layer);
+            }
+
+            // Add glowing elements on the trunk - bioluminescent moss
+            const numGlows = 10 + Math.floor(Math.random() * 10);
+            for (let i = 0; i < numGlows; i++) {
+                const glowGeometry = new THREE.SphereGeometry(0.1 + Math.random() * 0.15, 8, 8);
+                const glowColor = Math.random() > 0.5 ? 0x00ff88 : 0x00ffcc;
+                const glowMaterial = new THREE.MeshStandardMaterial({
+                    color: glowColor,
+                    emissive: glowColor,
+                    emissiveIntensity: 0.8 + Math.random() * 0.4,
+                    transparent: true,
+                    opacity: 0.7
+                });
+                const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+                const angle = Math.random() * Math.PI * 2;
+                const heightPos = Math.random() * trunkHeight;
+                const radiusPos = trunkBottomRadius * (0.5 + Math.random() * 0.4);
+                glow.position.set(
+                    Math.cos(angle) * radiusPos,
+                    heightPos,
+                    Math.sin(angle) * radiusPos
+                );
+                glow.userData.pulseSpeed = 0.5 + Math.random() * 1;
+                glow.userData.material = glowMaterial;
+                tree.add(glow);
+            }
+
+            // Hanging vines
+            const numVines = 5 + Math.floor(Math.random() * 5);
+            for (let i = 0; i < numVines; i++) {
+                const vinePoints = [];
+                const vineLength = 3 + Math.random() * 4;
+                const angle = Math.random() * Math.PI * 2;
+                const startRadius = canopySize * 0.8;
+                
+                for (let j = 0; j < 8; j++) {
+                    const t = j / 7;
+                    const sway = Math.sin(t * Math.PI) * 0.3;
+                    vinePoints.push(new THREE.Vector3(
+                        Math.cos(angle) * startRadius + sway,
+                        canopyHeight - t * vineLength,
+                        Math.sin(angle) * startRadius + sway
+                    ));
+                }
+
+                const vineCurve = new THREE.CatmullRomCurve3(vinePoints);
+                const vineGeometry = new THREE.TubeGeometry(vineCurve, 12, 0.05, 6, false);
+                const vineMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x1a4a1a,
+                    emissive: 0x003300,
+                    emissiveIntensity: 0.2,
+                    roughness: 0.8
+                });
+                const vine = new THREE.Mesh(vineGeometry, vineMaterial);
+                vine.userData.swaySpeed = 0.3 + Math.random() * 0.3;
+                vine.userData.swayAmount = 0.05;
+                tree.add(vine);
+            }
+
+            tree.add(trunk);
+            tree.add(canopy);
+            tree.position.set(x, 0, z);
+
+            tree.userData.swaySpeed = 0.1 + Math.random() * 0.15;
+            tree.userData.swayAmount = 0.02 + Math.random() * 0.02;
+
+            return tree;
+        }
+
+        function createGrassBlade(x, z) {
+            const grass = new THREE.Group();
+
+            const numBlades = 3 + Math.floor(Math.random() * 5);
+            
+            for (let i = 0; i < numBlades; i++) {
+                const height = 0.5 + Math.random() * 0.8;
+                const points = [];
+                
+                // Create curved blade shape
+                for (let j = 0; j < 6; j++) {
+                    const t = j / 5;
+                    const curve = Math.sin(t * Math.PI) * 0.15;
+                    points.push(new THREE.Vector3(
+                        curve,
+                        t * height,
+                        0
+                    ));
+                }
+
+                const curve = new THREE.CatmullRomCurve3(points);
+                const geometry = new THREE.TubeGeometry(curve, 8, 0.03, 4, false);
+                const material = new THREE.MeshStandardMaterial({
+                    color: 0x00ff44,
+                    emissive: 0x00aa22,
+                    emissiveIntensity: 0.3,
+                    roughness: 0.7,
+                    side: THREE.DoubleSide
+                });
+
+                const blade = new THREE.Mesh(geometry, material);
+                const angle = (i / numBlades) * Math.PI * 2 + Math.random() * 0.5;
+                blade.rotation.y = angle;
+                blade.rotation.z = (Math.random() - 0.5) * 0.3;
+                grass.add(blade);
+            }
+
+            grass.position.set(x, 0, z);
+            grass.userData.swaySpeed = 1.2 + Math.random() * 0.8;
+            grass.userData.swayAmount = 0.15 + Math.random() * 0.1;
+
+            return grass;
+        }
+
+        function createGlowingPlant(x, z) {
+            const plant = new THREE.Group();
+
+            const plantColors = [
+                { color: 0x00ff88, emissive: 0x00ff88 },
+                { color: 0xff00ff, emissive: 0xff00ff },
+                { color: 0x00ffcc, emissive: 0x00ffcc },
+                { color: 0xff6600, emissive: 0xff6600 },
+            ];
+
+            const type = plantColors[Math.floor(Math.random() * plantColors.length)];
+
+            // Create stem
+            const stemGeometry = new THREE.CylinderGeometry(0.05, 0.08, 1, 8);
+            const stemMaterial = new THREE.MeshStandardMaterial({
+                color: 0x116622,
+                roughness: 0.8
+            });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.position.y = 0.5;
+            plant.add(stem);
+
+            // Create glowing bulbs
+            const numBulbs = 3 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < numBulbs; i++) {
+                const bulbGeometry = new THREE.SphereGeometry(0.15 + Math.random() * 0.1, 8, 8);
+                const bulbMaterial = new THREE.MeshStandardMaterial({
+                    color: type.color,
+                    emissive: type.emissive,
+                    emissiveIntensity: 1.2,
+                    roughness: 0.3,
+                    transparent: true,
+                    opacity: 0.9
+                });
+
+                const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
+                const height = 0.8 + i * 0.3;
+                const offset = (Math.random() - 0.5) * 0.3;
+                bulb.position.set(offset, height, 0);
+                bulb.castShadow = true;
+
+                bulb.userData.pulseSpeed = 1.5 + Math.random();
+                bulb.userData.material = bulbMaterial;
+                plant.add(bulb);
+            }
+
+            plant.position.set(x, 0, z);
+            plant.userData.swaySpeed = 0.8 + Math.random() * 0.5;
+            plant.userData.swayAmount = 0.1 + Math.random() * 0.1;
+
+            return plant;
+        }
+
+        function createRock(x, z) {
+            const rock = new THREE.Group();
+
+            const size = 0.5 + Math.random() * 0.8;
+            const rockGeometry = new THREE.DodecahedronGeometry(size, 0);
+            const rockMaterial = new THREE.MeshStandardMaterial({
+                color: 0x334433,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+
+            const mainRock = new THREE.Mesh(rockGeometry, rockMaterial);
+            mainRock.position.y = size * 0.5;
+            mainRock.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+            mainRock.castShadow = true;
+            mainRock.receiveShadow = true;
+
+            // Add moss/glow patches
+            const mossGeometry = new THREE.SphereGeometry(size * 0.3, 8, 8);
+            const mossMaterial = new THREE.MeshStandardMaterial({
+                color: 0x00ff88,
+                emissive: 0x00ff88,
+                emissiveIntensity: 0.5,
+                roughness: 0.7
+            });
+
+            for (let i = 0; i < 2; i++) {
+                const moss = new THREE.Mesh(mossGeometry, mossMaterial);
+                moss.position.set(
+                    (Math.random() - 0.5) * size,
+                    size * 0.6,
+                    (Math.random() - 0.5) * size
+                );
+                moss.scale.set(0.8, 0.5, 0.8);
+                rock.add(moss);
+            }
+
+            rock.add(mainRock);
+            rock.position.set(x, 0, z);
+
+            return rock;
+        }
+
+        function createFern(x, z) {
+            const fern = new THREE.Group();
+
+            const fernMaterial = new THREE.MeshStandardMaterial({
+                color: 0x00ff44,
+                emissive: 0x00aa22,
+                emissiveIntensity: 0.4,
+                roughness: 0.7,
+                side: THREE.DoubleSide
+            });
+
+            // Create multiple fronds
+            const numFronds = 5 + Math.floor(Math.random() * 4);
+            for (let i = 0; i < numFronds; i++) {
+                const points = [];
+                const length = 1 + Math.random() * 0.5;
+                
+                for (let j = 0; j < 8; j++) {
+                    const t = j / 7;
+                    points.push(new THREE.Vector3(
+                        0,
+                        t * length,
+                        Math.sin(t * Math.PI) * 0.3
+                    ));
+                }
+
+                const curve = new THREE.CatmullRomCurve3(points);
+                const tubeGeometry = new THREE.TubeGeometry(curve, 12, 0.08, 4, false);
+                const frond = new THREE.Mesh(tubeGeometry, fernMaterial);
+
+                const angle = (i / numFronds) * Math.PI * 2;
+                frond.rotation.y = angle;
+                frond.rotation.x = 0.3 + Math.random() * 0.3;
+                fern.add(frond);
+            }
+
+            fern.position.set(x, 0, z);
+            fern.userData.swaySpeed = 0.6 + Math.random() * 0.4;
+            fern.userData.swayAmount = 0.08 + Math.random() * 0.06;
+
+            return fern;
+        }
+
+        function createMushroom(x, z) {
+            const mushroom = new THREE.Group();
+
+            // More varied stem dimensions
+            const stemHeight = 0.6 + Math.random() * 0.8;
+            const stemBottomRadius = 0.12 + Math.random() * 0.1;
+            const stemTopRadius = 0.08 + Math.random() * 0.08;
+            const stemSegments = 8 + Math.floor(Math.random() * 4);
+            
+            const stemGeometry = new THREE.CylinderGeometry(stemTopRadius, stemBottomRadius, stemHeight, stemSegments);
+            const stemMaterial = new THREE.MeshStandardMaterial({
+                color: 0xeeeecc,
+                roughness: 0.7
+            });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.position.y = stemHeight / 2;
+            stem.castShadow = true;
+
+            // Much more varied cap shapes and sizes
+            const capStyle = Math.random();
+            let cap;
+            let capSize = 0.3 + Math.random() * 0.4;
+            
+            // Psychedelic gradient colors from original - vibrant and varied
+            const mushroomColors = [
+                { color: 0xff0099, emissive: 0xff0099 }, // Hot magenta-pink
+                { color: 0x00ffff, emissive: 0x00ffff }, // Bright cyan
+                { color: 0xffff00, emissive: 0xffff00 }, // Electric yellow
+                { color: 0x00ff00, emissive: 0x00ff00 }, // Neon green
+                { color: 0xff00ff, emissive: 0xff00ff }, // Pure magenta
+                { color: 0xff6600, emissive: 0xff6600 }, // Vibrant orange
+                { color: 0x00ffcc, emissive: 0x00ffcc }, // Cyan-green
+                { color: 0xff0088, emissive: 0xff0088 }, // Pink-red
+                { color: 0x00ff88, emissive: 0x00ff88 }, // Teal-green
+                { color: 0xffaa00, emissive: 0xffaa00 }, // Golden orange
+            ];
+            
+            const type = mushroomColors[Math.floor(Math.random() * mushroomColors.length)];
+            
+            const capMaterial = new THREE.MeshStandardMaterial({
+                color: type.color,
+                emissive: type.emissive,
+                emissiveIntensity: 0.8 + Math.random() * 0.7,
+                roughness: 0.4,
+                metalness: 0.3,
+                transparent: true,
+                opacity: 0.9
+            });
+
+            if (capStyle < 0.3) {
+                // Rounded dome cap
+                const capGeometry = new THREE.SphereGeometry(capSize, 12, 12);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+                cap.scale.set(1, 0.4 + Math.random() * 0.4, 1);
+            } else if (capStyle < 0.6) {
+                // Flat-topped cap
+                const capGeometry = new THREE.CylinderGeometry(capSize * 0.9, capSize, capSize * 0.4, 12);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+            } else {
+                // Conical cap
+                const capGeometry = new THREE.ConeGeometry(capSize, capSize * 0.8, 12);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+            }
+
+            cap.position.y = stemHeight + capSize * 0.3;
+            cap.castShadow = true;
+
+            // Add varied gills under the cap
+            const gillsRadius = capSize * (0.85 + Math.random() * 0.1);
+            const gillsGeometry = new THREE.CylinderGeometry(gillsRadius, gillsRadius, 0.05 + Math.random() * 0.05, 16);
+            const gillsMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                emissive: type.emissive,
+                emissiveIntensity: 0.3,
+                roughness: 0.7,
+                opacity: 0.7 + Math.random() * 0.2,
+                transparent: true
+            });
+            const gills = new THREE.Mesh(gillsGeometry, gillsMaterial);
+            gills.position.y = stemHeight + capSize * 0.05;
+
+            // Add varied spots on cap
+            const numSpots = 2 + Math.floor(Math.random() * 5);
+            for (let i = 0; i < numSpots; i++) {
+                const spotSize = 0.05 + Math.random() * 0.1;
+                const spotGeometry = new THREE.SphereGeometry(spotSize, 8, 8);
+                
+                // Psychedelic spot colors - vibrant complementary colors
+                const spotColors = [0xffffff, 0xffff00, 0x00ffff, 0xff00ff, 0x00ff00, 0xff0099];
+                const spotColor = spotColors[Math.floor(Math.random() * spotColors.length)];
+                
+                const spotMaterial = new THREE.MeshStandardMaterial({
+                    color: spotColor,
+                    emissive: spotColor,
+                    emissiveIntensity: 1.5 + Math.random() * 0.8,
+                    transparent: true,
+                    opacity: 0.8 + Math.random() * 0.2
+                });
+                const spot = new THREE.Mesh(spotGeometry, spotMaterial);
+                
+                // Random position on cap
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * capSize * 0.7;
+                spot.position.set(
+                    Math.cos(angle) * radius,
+                    stemHeight + capSize * 0.4,
+                    Math.sin(angle) * radius
+                );
+                mushroom.add(spot);
+            }
+
+            mushroom.add(stem);
+            mushroom.add(cap);
+            mushroom.add(gills);
+            mushroom.position.set(x, 0, z);
+
+            mushroom.userData.material = capMaterial;
+            mushroom.userData.cap = cap;
+            mushroom.userData.glowSpeed = 1 + Math.random() * 2;
+
+            return mushroom;
+        }
+
+        function createMediumMushroom(x, z) {
+            const mushroom = new THREE.Group();
+
+            // Medium-sized stem
+            const stemHeight = 1.5 + Math.random() * 1;
+            const stemBottomRadius = 0.18 + Math.random() * 0.12;
+            const stemTopRadius = 0.15 + Math.random() * 0.1;
+            const stemSegments = 10 + Math.floor(Math.random() * 4);
+            
+            const stemGeometry = new THREE.CylinderGeometry(stemTopRadius, stemBottomRadius, stemHeight, stemSegments);
+            const stemMaterial = new THREE.MeshStandardMaterial({
+                color: 0xddddbb,
+                roughness: 0.75
+            });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.position.y = stemHeight / 2;
+            stem.castShadow = true;
+
+            // Varied cap shapes for medium size
+            const capStyle = Math.random();
+            let cap;
+            let capSize = 0.7 + Math.random() * 0.6;
+            
+            const mushroomColors = [
+                { color: 0xff0099, emissive: 0xff0099 }, // Hot magenta-pink
+                { color: 0x00ffff, emissive: 0x00ffff }, // Bright cyan
+                { color: 0xffff00, emissive: 0xffff00 }, // Electric yellow
+                { color: 0x00ff00, emissive: 0x00ff00 }, // Neon green
+                { color: 0xff00ff, emissive: 0xff00ff }, // Pure magenta
+                { color: 0xff6600, emissive: 0xff6600 }, // Vibrant orange
+                { color: 0x00ffcc, emissive: 0x00ffcc }, // Cyan-green
+                { color: 0xff0088, emissive: 0xff0088 }, // Pink-red
+                { color: 0x00ff88, emissive: 0x00ff88 }, // Teal-green
+                { color: 0xffaa00, emissive: 0xffaa00 }, // Golden orange
+            ];
+            
+            const type = mushroomColors[Math.floor(Math.random() * mushroomColors.length)];
+            
+            const capMaterial = new THREE.MeshStandardMaterial({
+                color: type.color,
+                emissive: type.emissive,
+                emissiveIntensity: 0.8 + Math.random() * 0.7,
+                roughness: 0.4,
+                metalness: 0.3,
+                transparent: true,
+                opacity: 0.9
+            });
+
+            if (capStyle < 0.3) {
+                // Dome shape
+                const capGeometry = new THREE.SphereGeometry(capSize, 14, 14);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+                cap.scale.set(1, 0.45 + Math.random() * 0.3, 1);
+            } else if (capStyle < 0.6) {
+                // Bell shape
+                const capGeometry = new THREE.CylinderGeometry(capSize * 0.85, capSize * 1.05, capSize * 0.6, 14);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+            } else {
+                // Umbrella/parasol shape
+                const capGeometry = new THREE.SphereGeometry(capSize, 14, 14);
+                cap = new THREE.Mesh(capGeometry, capMaterial);
+                cap.scale.set(1, 0.35 + Math.random() * 0.2, 1);
+            }
+
+            cap.position.y = stemHeight + capSize * 0.35;
+            cap.castShadow = true;
+
+            // Gills
+            const gillsRadius = capSize * (0.88 + Math.random() * 0.12);
+            const gillsGeometry = new THREE.CylinderGeometry(gillsRadius, gillsRadius, 0.07 + Math.random() * 0.06, 16);
+            const gillsMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                emissive: type.emissive,
+                emissiveIntensity: 0.3,
+                roughness: 0.7,
+                opacity: 0.75 + Math.random() * 0.15,
+                transparent: true
+            });
+            const gills = new THREE.Mesh(gillsGeometry, gillsMaterial);
+            gills.position.y = stemHeight + capSize * 0.08;
+
+            // Spots
+            const numSpots = 3 + Math.floor(Math.random() * 5);
+            for (let i = 0; i < numSpots; i++) {
+                const spotSize = 0.06 + Math.random() * 0.12;
+                const spotGeometry = new THREE.SphereGeometry(spotSize, 8, 8);
+                
+                // Psychedelic spot colors - vibrant complementary colors
+                const spotColors = [0xffffff, 0xffff00, 0x00ffff, 0xff00ff, 0x00ff00, 0xff0099];
+                const spotColor = spotColors[Math.floor(Math.random() * spotColors.length)];
+                
+                const spotMaterial = new THREE.MeshStandardMaterial({
+                    color: spotColor,
+                    emissive: spotColor,
+                    emissiveIntensity: 1.5 + Math.random() * 0.8,
+                    transparent: true,
+                    opacity: 0.8 + Math.random() * 0.2
+                });
+                const spot = new THREE.Mesh(spotGeometry, spotMaterial);
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * capSize * 0.7;
+                spot.position.set(
+                    Math.cos(angle) * radius,
+                    stemHeight + capSize * (0.35 + Math.random() * 0.15),
+                    Math.sin(angle) * radius
+                );
+                mushroom.add(spot);
+            }
+
+            mushroom.add(stem);
+            mushroom.add(cap);
+            mushroom.add(gills);
+            mushroom.position.set(x, 0, z);
+
+            mushroom.userData.material = capMaterial;
+            mushroom.userData.cap = cap;
+            mushroom.userData.glowSpeed = 1 + Math.random() * 1.8;
+
+            return mushroom;
+        }
+
+        function createOrb(x, z) {
+            const orbGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const orbMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffff00,
+                emissive: 0xffff00,
+                emissiveIntensity: 2,
+                roughness: 0.2,
+                metalness: 0.8,
+                transparent: true,
+                opacity: 0.9
+            });
+            const orb = new THREE.Mesh(orbGeometry, orbMaterial);
+            orb.position.set(x, 1 + Math.random() * 2, z);
+            orb.castShadow = true;
+
+            orb.userData.pulseSpeed = 2 + Math.random();
+            orb.userData.baseY = orb.position.y;
+            orb.userData.floatSpeed = 1 + Math.random();
+            orb.userData.isOrb = true;
+            orb.userData.radius = 0.3;
+
+            // Add glow
+            const glowGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+            const glowMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffff00,
+                transparent: true,
+                opacity: 0.3
+            });
+            const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+            orb.add(glow);
+
+            return orb;
         }
 
         function generateTerrainChunk(startZ) {
-            const chunk = { z: startZ, objects: [], mushrooms: [], orbs: [], cleanup: () => {
-                chunk.objects.forEach(obj => scene.remove(obj));
-            }};
+            const chunk = {
+                z: startZ,
+                objects: [],
+                cleanup: function() {
+                    this.objects.forEach(obj => scene.remove(obj));
+                }
+            };
 
-            // Ground
-            const pathGeom = new THREE.PlaneGeometry(CONFIG.terrainWidth, chunkSize);
-            const pathMat = new THREE.MeshStandardMaterial({ color: 0x1a472a, roughness: 0.9 });
-            const path = new THREE.Mesh(pathGeom, pathMat);
-            path.rotation.x = -Math.PI / 2;
-            path.position.z = startZ - chunkSize / 2;
-            scene.add(path);
-            chunk.objects.push(path);
-
-            // Mushrooms
-            const mushroomCount = 12 + Math.floor(Math.random() * 10);
-            for (let i = 0; i < mushroomCount; i++) {
-                const x = (Math.random() - 0.5) * CONFIG.terrainWidth * 0.9;
+            // Gigantic Trees (decorative only, no collision)
+            const numGiganticTrees = 2 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < numGiganticTrees; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 6);
                 const z = startZ - Math.random() * chunkSize;
-                const mushroom = createMushroom();
-                mushroom.position.set(x, 0, z);
-                scene.add(mushroom);
-                chunk.objects.push(mushroom);
-                
-                const data = { mesh: mushroom, position: mushroom.position, radius: mushroom.userData.collisionRadius, id: `m_${startZ}_${i}` };
-                chunk.mushrooms.push(data);
-                mushrooms.push(data);
+                const giganticTree = createGiganticTree(x, z);
+                scene.add(giganticTree);
+                chunk.objects.push(giganticTree);
             }
 
-            // Orbs
-            const orbCount = 8 + Math.floor(Math.random() * 8);
-            for (let i = 0; i < orbCount; i++) {
-                const x = (Math.random() - 0.5) * CONFIG.terrainWidth * 0.7;
+            // Large Mushrooms (obstacles - 30 points)
+            const numLargeMushrooms = 10 + Math.floor(Math.random() * 6);
+            for (let i = 0; i < numLargeMushrooms; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 4);
                 const z = startZ - Math.random() * chunkSize;
-                const orb = createCollectibleOrb();
-                orb.position.set(x, 0.8, z);
+                const tree = createTree(x, z);
+                scene.add(tree);
+                chunk.objects.push(tree);
+
+                collidableObjects.push({
+                    position: tree.position,
+                    radius: 1.2,
+                    type: 'largeMushroom',
+                    points: -30
+                });
+            }
+
+            // Medium Mushrooms (obstacles - 10 points)
+            const numMediumMushrooms = 15 + Math.floor(Math.random() * 10);
+            for (let i = 0; i < numMediumMushrooms; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 3);
+                const z = startZ - Math.random() * chunkSize;
+                const mediumMushroom = createMediumMushroom(x, z);
+                scene.add(mediumMushroom);
+                chunk.objects.push(mediumMushroom);
+
+                collidableObjects.push({
+                    position: mediumMushroom.position,
+                    radius: 0.75,
+                    type: 'mediumMushroom',
+                    points: -10
+                });
+            }
+
+            // Small Mushrooms (obstacles - 5 points)
+            const numSmallMushrooms = 20 + Math.floor(Math.random() * 15);
+            for (let i = 0; i < numSmallMushrooms; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 2);
+                const z = startZ - Math.random() * chunkSize;
+                const mushroom = createMushroom(x, z);
+                scene.add(mushroom);
+                chunk.objects.push(mushroom);
+
+                collidableObjects.push({
+                    position: mushroom.position,
+                    radius: 0.4,
+                    type: 'smallMushroom',
+                    points: -5
+                });
+            }
+
+            // Grass Blades (decorative, no collision)
+            const numGrass = 60 + Math.floor(Math.random() * 40);
+            for (let i = 0; i < numGrass; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 1);
+                const z = startZ - Math.random() * chunkSize;
+                const grass = createGrassBlade(x, z);
+                scene.add(grass);
+                chunk.objects.push(grass);
+            }
+
+            // Glowing Plants (decorative, no collision)
+            const numPlants = 15 + Math.floor(Math.random() * 10);
+            for (let i = 0; i < numPlants; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 2);
+                const z = startZ - Math.random() * chunkSize;
+                const plant = createGlowingPlant(x, z);
+                scene.add(plant);
+                chunk.objects.push(plant);
+            }
+
+            // Rocks (decorative, no collision)
+            const numRocks = 8 + Math.floor(Math.random() * 6);
+            for (let i = 0; i < numRocks; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 2);
+                const z = startZ - Math.random() * chunkSize;
+                const rock = createRock(x, z);
+                scene.add(rock);
+                chunk.objects.push(rock);
+            }
+
+            // Ferns (decorative, no collision)
+            const numFerns = 12 + Math.floor(Math.random() * 8);
+            for (let i = 0; i < numFerns; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 2);
+                const z = startZ - Math.random() * chunkSize;
+                const fern = createFern(x, z);
+                scene.add(fern);
+                chunk.objects.push(fern);
+            }
+
+            // Orbs (collectibles) - +50 points
+            const numOrbs = 12 + Math.floor(Math.random() * 10);
+            for (let i = 0; i < numOrbs; i++) {
+                const x = (Math.random() - 0.5) * (CONFIG.terrainWidth - 2);
+                const z = startZ - Math.random() * chunkSize;
+                const orb = createOrb(x, z);
                 scene.add(orb);
                 chunk.objects.push(orb);
-                
-                const data = { mesh: orb, position: orb.position, radius: 0.3, id: `o_${startZ}_${i}` };
-                chunk.orbs.push(data);
-                orbs.push(data);
+
+                collectibles.push({
+                    mesh: orb,
+                    position: orb.position,
+                    radius: 0.3,
+                    collected: false
+                });
             }
 
             activeChunks.push(chunk);
         }
 
-        function createMushroom() {
-            const group = new THREE.Group();
-            const sizeVar = Math.random();
-            let height, capRad;
-            
-            if (sizeVar < 0.3) { height = 0.5; capRad = 0.4; }
-            else if (sizeVar < 0.6) { height = 2; capRad = 1.5; }
-            else if (sizeVar < 0.85) { height = 4; capRad = 3; }
-            else { height = 7; capRad = 5; }
+        function showFloatingText(text, color, x, y) {
+            const floatingText = document.createElement('div');
+            floatingText.className = 'floating-text';
+            floatingText.textContent = text;
+            floatingText.style.color = color;
+            floatingText.style.left = x + 'px';
+            floatingText.style.top = y + 'px';
+            document.body.appendChild(floatingText);
 
-            const stem = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.1, 0.15, height),
-                new THREE.MeshStandardMaterial({ color: 0xf0f0f0 })
-            );
-            stem.position.y = height / 2;
-            group.add(stem);
-
-            const color = CONFIG.colors.mushrooms[Math.floor(Math.random() * CONFIG.colors.mushrooms.length)];
-            const cap = new THREE.Mesh(
-                new THREE.ConeGeometry(capRad, capRad * 0.7, 16),
-                new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 1, transparent: true, opacity: 0.9 })
-            );
-            cap.position.y = height + capRad * 0.35;
-            group.add(cap);
-
-            group.userData = { cap, material: cap.material, glowSpeed: 0.8, collisionRadius: capRad * 0.8 };
-            return group;
+            setTimeout(() => {
+                document.body.removeChild(floatingText);
+            }, 1000);
         }
 
-        function createCollectibleOrb() {
-            const group = new THREE.Group();
-            const color = CONFIG.colors.orbs[Math.floor(Math.random() * CONFIG.colors.orbs.length)];
+        function flashScreen(type) {
+            const flash = document.getElementById('collision-flash');
+            flash.className = 'collision-flash ' + type;
+            setTimeout(() => {
+                flash.className = 'collision-flash';
+            }, 300);
+        }
+
+        function updateHealth(damage) {
+            health = Math.max(0, health + damage); // damage is negative for losing health
             
-            const orb = new THREE.Mesh(
-                new THREE.SphereGeometry(0.25, 16, 16),
-                new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 2, transparent: true, opacity: 0.9 })
-            );
-            group.add(orb);
-
-            const ring = new THREE.Mesh(
-                new THREE.TorusGeometry(0.35, 0.03, 8, 16),
-                new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 1.5, transparent: true, opacity: 0.6 })
-            );
-            ring.rotation.x = Math.PI / 2;
-            group.add(ring);
-
-            group.userData = { orb, ring, material: orb.material, ringMaterial: ring.material, pulseSpeed: 1.5, rotateSpeed: 1, baseY: 0 };
-            return group;
+            const healthElement = document.getElementById('health');
+            const healthBar = document.getElementById('health-bar');
+            const healthText = document.getElementById('health-text');
+            
+            // Update health display
+            healthElement.textContent = Math.floor(health);
+            healthText.textContent = Math.floor(health) + ' / 100';
+            
+            // Update health bar width
+            healthBar.style.width = health + '%';
+            
+            // Update health bar color based on remaining health
+            if (health > 60) {
+                healthBar.className = 'health-bar high';
+                healthElement.style.color = '#00ff88';
+            } else if (health > 30) {
+                healthBar.className = 'health-bar medium';
+                healthElement.style.color = '#ffaa00';
+            } else {
+                healthBar.className = 'health-bar low';
+                healthElement.style.color = '#ff0044';
+            }
+            
+            // Game over if health reaches 0
+            if (health <= 0) {
+                gameOver();
+            }
         }
 
         function updateScore(points) {
             score += points;
-            document.getElementById('score-value').textContent = score;
-            
-            const feedback = document.getElementById('score-feedback');
-            feedback.textContent = points > 0 ? `+${points}` : points;
-            feedback.style.color = points > 0 ? '#00ff00' : '#ff0000';
-            feedback.className = 'show';
-            setTimeout(() => feedback.className = '', 1000);
+            const scoreElement = document.getElementById('score');
+            scoreElement.textContent = score;
+
+            if (points > 0) {
+                scoreElement.className = 'hud-value points-positive';
+            } else {
+                scoreElement.className = 'hud-value points-negative';
+                setTimeout(() => {
+                    scoreElement.className = 'hud-value points-positive';
+                }, 500);
+            }
         }
 
-        function checkCollisions() {
-            const snailPos = snail.mesh.position;
-            const snailRadius = 0.25;
-            
-            mushrooms.forEach(m => {
-                if (collidedMushrooms.has(m.id)) return;
-                if (Math.abs(m.position.z - snailPos.z) < 5) {
-                    const dx = snailPos.x - m.position.x;
-                    const dz = snailPos.z - m.position.z;
-                    if (Math.sqrt(dx*dx + dz*dz) < snailRadius + m.radius) {
-                        collidedMushrooms.add(m.id);
-                        updateScore(-5);
-                        const mat = m.mesh.userData.material;
-                        const orig = mat.emissive.getHex();
-                        mat.emissive.setHex(0xff0000);
-                        setTimeout(() => mat.emissive.setHex(orig), 200);
-                    }
-                }
-            });
-            
-            orbs.forEach(o => {
-                if (collectedOrbs.has(o.id)) return;
-                if (Math.abs(o.position.z - snailPos.z) < 5) {
-                    const dx = snailPos.x - o.position.x;
-                    const dy = snailPos.y - o.position.y;
-                    const dz = snailPos.z - o.position.z;
-                    if (Math.sqrt(dx*dx + dy*dy + dz*dz) < snailRadius + o.radius) {
-                        collectedOrbs.add(o.id);
-                        updateScore(10);
-                        const scale = () => {
-                            o.mesh.scale.multiplyScalar(0.9);
-                            if (o.mesh.scale.x > 0.1) requestAnimationFrame(scale);
-                            else scene.remove(o.mesh);
-                        };
-                        scale();
-                    }
-                }
-            });
+        function gameOver() {
+            isRunning = false;
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('game-over').classList.add('show');
         }
 
-        function onMouseMove(e) { mouseX = (e.clientX / window.innerWidth) * 2 - 1; mouseY = -(e.clientY / window.innerHeight) * 2 + 1; }
-        function onMouseWheel(e) { targetSpeed += e.deltaY * -0.001; targetSpeed = Math.max(CONFIG.minSpeed, Math.min(CONFIG.maxSpeed, targetSpeed)); }
-        function onKeyDown(e) { if (e.code === 'Space') { boosting = true; targetSpeed = CONFIG.maxSpeed; }}
-        function onKeyUp(e) { if (e.code === 'Space') { boosting = false; targetSpeed = baseSpeed; }}
-        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
+        function restartGame() {
+            // Reset variables
+            score = 0;
+            health = 100; // Reset health
+            distance = 0;
+            currentSpeed = 0.075; // Reset to 1.5x base speed
+            targetSpeed = 0.075; // Reset to 1.5x base speed
+            speedMultiplier = 1.5; // Reset to 1.5x
+
+            // Reset HUD
+            document.getElementById('score').textContent = '0';
+            document.getElementById('health').textContent = '100';
+            document.getElementById('health').style.color = '#00ff88';
+            document.getElementById('health-bar').style.width = '100%';
+            document.getElementById('health-bar').className = 'health-bar high';
+            document.getElementById('health-text').textContent = '100 / 100';
+            document.getElementById('distance').textContent = '0m';
+            document.getElementById('speed').textContent = '1.5x';
+
+            // Clear collectibles and obstacles
+            collidableObjects = [];
+            collectibles = [];
+
+            // Remove all chunks
+            activeChunks.forEach(chunk => chunk.cleanup());
+            activeChunks = [];
+
+            // Reset terrain
+            lastTerrainZ = 0;
+            for (let i = 0; i < 5; i++) {
+                generateTerrainChunk(lastTerrainZ);
+                lastTerrainZ -= chunkSize;
+            }
+
+            // Reset snail and camera
+            snail.mesh.position.set(0, CONFIG.snailHeight, 0);
+            camera.position.set(0, CONFIG.cameraHeight, 5);
+
+            // Hide game over screen
+            document.getElementById('game-over').classList.remove('show');
+
+            // Restart animation
+            isRunning = true;
+            animate();
+        }
 
         function animate() {
             if (!isRunning) return;
             requestAnimationFrame(animate);
 
             time += 0.016;
+
+            // Gradually increase speed
+            speedMultiplier = 1.5 + (distance * 0.00015);
+            targetSpeed = baseSpeed * speedMultiplier;
+            targetSpeed = Math.min(targetSpeed, CONFIG.maxSpeed);
             currentSpeed += (targetSpeed - currentSpeed) * 0.05;
-            distance += currentSpeed;
+            distance += currentSpeed * 50;
 
-            cameraOffsetX += (mouseX * 1.5 - cameraOffsetX) * 0.05;
-            cameraOffsetY += (mouseY * 0.8 - cameraOffsetY) * 0.05;
-            
-            const targetSnailX = mouseX * 5;
-            snail.mesh.position.x += (targetSnailX - snail.mesh.position.x) * 0.08;
-            snail.mesh.position.x = Math.max(-CONFIG.terrainWidth / 2 + 1, Math.min(CONFIG.terrainWidth / 2 - 1, snail.mesh.position.x));
+            // Update HUD
+            document.getElementById('distance').textContent = Math.floor(distance) + 'm';
+            document.getElementById('speed').textContent = speedMultiplier.toFixed(1) + 'x';
 
+            // Snail follows mouse X movement
+            const targetSnailX = mouseX * (CONFIG.terrainWidth / 2 - 1);
+            snail.mesh.position.x += (targetSnailX - snail.mesh.position.x) * 0.1;
+
+            // Keep snail within bounds
+            snail.mesh.position.x = Math.max(-CONFIG.terrainWidth / 2 + 1, 
+                Math.min(CONFIG.terrainWidth / 2 - 1, snail.mesh.position.x));
+
+            // Move camera and snail forward
             camera.position.z -= currentSpeed;
             snail.mesh.position.z -= currentSpeed;
-            camera.position.x = snail.mesh.position.x + cameraOffsetX * 0.5;
-            camera.position.y = CONFIG.cameraHeight + cameraOffsetY;
-            camera.lookAt(snail.mesh.position.x + cameraOffsetX * 0.3, CONFIG.snailHeight + cameraOffsetY * 0.3, camera.position.z - 5);
 
-            checkCollisions();
+            // Camera follows snail
+            camera.position.x += (snail.mesh.position.x - camera.position.x) * 0.1;
+            camera.lookAt(snail.mesh.position.x, CONFIG.snailHeight, camera.position.z - 5);
 
-            lights.forEach(l => {
-                if (l.type === 'snail') {
-                    l.light.position.copy(snail.mesh.position);
-                    l.light.position.y = CONFIG.snailHeight;
-                    l.light.intensity = 2.5 + Math.sin(time * 3) * 0.5;
-                } else {
-                    const a = l.offset + time * 0.5;
-                    l.light.position.set(snail.mesh.position.x + Math.cos(a) * l.radius, 2 + Math.sin(time + l.offset), snail.mesh.position.z + Math.sin(a) * l.radius);
+            // Check collisions with obstacles
+            const snailPos = snail.mesh.position;
+            collidableObjects.forEach((obj, index) => {
+                if (obj.collected) return;
+
+                // Only check nearby objects
+                if (Math.abs(obj.position.z - snailPos.z) < 5) {
+                    const dx = snailPos.x - obj.position.x;
+                    const dz = snailPos.z - obj.position.z;
+                    const distance = Math.sqrt(dx * dx + dz * dz);
+
+                    if (distance < (0.4 + obj.radius)) {
+                        // Collision detected!
+                        const healthDamage = obj.points; // -5, -10, or -30 depending on mushroom type
+                        updateHealth(healthDamage);
+                        flashScreen('hit');
+                        showFloatingText(healthDamage.toString() + ' HP', '#ff4444', window.innerWidth / 2, window.innerHeight / 2);
+                        obj.collected = true; // Mark as hit to avoid multiple collisions
+                    }
                 }
             });
 
-            snail.shell.rotation.y += 0.02;
-            snail.shell.position.y = CONFIG.snailHeight + Math.sin(time * 2) * 0.02;
+            // Check collection of orbs
+            collectibles.forEach((orb, index) => {
+                if (orb.collected) return;
 
-            scene.traverse(obj => {
-                if (obj.userData.cap) {
-                    obj.userData.material.emissiveIntensity = 0.7 + Math.sin(time * obj.userData.glowSpeed) * 0.5;
-                }
-                if (obj.userData.orb) {
-                    const p = Math.sin(time * obj.userData.pulseSpeed);
-                    obj.userData.material.emissiveIntensity = 1.5 + p * 0.8;
-                    obj.userData.ring.rotation.z += 0.01 * obj.userData.rotateSpeed;
-                    obj.position.y = obj.userData.baseY + p * 0.2;
+                if (Math.abs(orb.position.z - snailPos.z) < 3) {
+                    const dx = snailPos.x - orb.position.x;
+                    const dz = snailPos.z - orb.position.z;
+                    const distance = Math.sqrt(dx * dx + dz * dz);
+
+                    if (distance < (0.4 + orb.radius)) {
+                        // Orb collected!
+                        updateScore(50);
+                        flashScreen('collect');
+                        showFloatingText('+50', '#00ff88', window.innerWidth / 2, window.innerHeight / 2);
+                        orb.collected = true;
+                        scene.remove(orb.mesh);
+                    }
                 }
             });
 
+            // Update lights
+            lights.forEach(lightObj => {
+                if (lightObj.type === 'snail') {
+                    lightObj.light.position.copy(snail.mesh.position);
+                    lightObj.light.position.y = CONFIG.snailHeight + 0.5;
+                    lightObj.light.intensity = 3 + Math.sin(time * 3) * 0.5;
+                } else if (lightObj.type === 'ambient') {
+                    const angle = lightObj.offset + time * 0.5;
+                    lightObj.light.position.x = snail.mesh.position.x + Math.cos(angle) * lightObj.radius;
+                    lightObj.light.position.z = snail.mesh.position.z + Math.sin(angle) * lightObj.radius;
+                    lightObj.light.position.y = 2 + Math.sin(time + lightObj.offset) * 1;
+                    lightObj.light.intensity = 1.5 + Math.sin(time * 2 + lightObj.offset) * 0.5;
+                }
+            });
+
+            // Animate snail
+            snail.shell.rotation.y += 0.03;
+            snail.shell.position.y = 0.1 + Math.sin(time * 3) * 0.03;
+            snail.body.scale.x = 1 + Math.sin(time * 4) * 0.08;
+            snail.body.scale.z = 1 + Math.sin(time * 4) * 0.08;
+
+            // Animate scene objects
+            scene.traverse((obj) => {
+                if (obj.userData.material && obj.userData.cap) {
+                    obj.userData.material.emissiveIntensity = 
+                        0.8 + Math.sin(time * obj.userData.glowSpeed + obj.position.z * 0.1) * 0.4;
+                    
+                    const scale = 1 + Math.sin(time * obj.userData.glowSpeed * 0.5) * 0.08;
+                    obj.userData.cap.scale.set(scale, scale, scale);
+                }
+
+                // Bulb pulse animation for plants
+                if (obj.userData.material && obj.userData.pulseSpeed && !obj.userData.cap && !obj.userData.isOrb) {
+                    obj.userData.material.emissiveIntensity = 
+                        1.2 + Math.sin(time * obj.userData.pulseSpeed) * 0.6;
+                }
+
+                if (obj.userData.isStrand && obj.material) {
+                    const pulse = Math.sin(time * obj.userData.pulseSpeed + obj.userData.pulseOffset);
+                    obj.material.emissiveIntensity = obj.userData.baseIntensity + pulse * 0.15;
+                    obj.material.opacity = obj.userData.baseOpacity + pulse * 0.08;
+                }
+
+                if (obj.userData.floatSpeed) {
+                    obj.position.y = obj.userData.baseY + Math.sin(time * obj.userData.floatSpeed) * 0.5;
+                }
+
+                if (obj.userData.pulseSpeed && obj.material && !obj.userData.isStrand && obj.userData.isOrb) {
+                    obj.material.emissiveIntensity = 2 + Math.sin(time * obj.userData.pulseSpeed) * 0.8;
+                    const scale = 1 + Math.sin(time * obj.userData.pulseSpeed) * 0.15;
+                    obj.scale.set(scale, scale, scale);
+                }
+
+                if (obj.userData.swaySpeed && obj.userData.swayAmount) {
+                    obj.rotation.z = Math.sin(time * obj.userData.swaySpeed + obj.position.x) * obj.userData.swayAmount;
+                }
+            });
+
+            // Generate new terrain ahead
             if (camera.position.z < lastTerrainZ + chunkSize * 2) {
                 generateTerrainChunk(lastTerrainZ);
                 lastTerrainZ -= chunkSize;
             }
 
+            // Clean up old chunks
             activeChunks = activeChunks.filter(chunk => {
                 if (chunk.z > camera.position.z + chunkSize * 3) {
-                    mushrooms = mushrooms.filter(m => !chunk.mushrooms.includes(m));
-                    orbs = orbs.filter(o => !chunk.orbs.includes(o));
+                    collidableObjects = collidableObjects.filter(obj => 
+                        obj.position.z <= chunk.z || obj.position.z > chunk.z - chunkSize
+                    );
+                    collectibles = collectibles.filter(obj =>
+                        obj.position.z <= chunk.z || obj.position.z > chunk.z - chunkSize
+                    );
                     chunk.cleanup();
                     return false;
                 }
@@ -659,19 +1865,59 @@
             renderer.render(scene, camera);
         }
 
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Start button
         document.getElementById('start-button').addEventListener('click', () => {
-            document.getElementById('ui-overlay').classList.add('hidden');
-            document.getElementById('audio-player').classList.add('visible');
+            const overlay = document.getElementById('ui-overlay');
+            overlay.classList.add('hidden');
+            
+            // Show and start audio player
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.classList.add('visible');
+            
+            // Auto-play music
             audio.play().then(() => {
                 isPlaying = true;
                 document.getElementById('play-icon').textContent = '⏸️';
-            }).catch(() => {
+                document.getElementById('audio-status').textContent = 'Playing...';
+            }).catch(e => {
+                console.log('Auto-play prevented, user can click play button');
+                isPlaying = false;
                 document.getElementById('play-icon').textContent = '▶️';
+                document.getElementById('audio-status').textContent = 'Paused';
             });
+            
             isRunning = true;
             animate();
         });
 
+        // Audio toggle button
+        document.getElementById('audio-toggle').addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                document.getElementById('play-icon').textContent = '▶️';
+                document.getElementById('audio-status').textContent = 'Paused';
+            } else {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    document.getElementById('play-icon').textContent = '⏸️';
+                    document.getElementById('audio-status').textContent = 'Playing...';
+                }).catch(e => {
+                    console.log('Failed to play audio:', e);
+                });
+            }
+        });
+
+        // Restart button
+        document.getElementById('restart-button').addEventListener('click', restartGame);
+
+        // Initialize
         init();
     </script>
 </body>
