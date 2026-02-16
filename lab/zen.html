@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serene Meditation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #5FBADB, #4FB3D4);
+            position: relative;
+        }
+
+        /* Cherry blossom branch */
+        .branch-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .branch {
+            background-color: #986666e0;
+            width: 11px;
+            height: 138px;
+            position: absolute;
+        }
+
+        #branch1 {
+            margin-top: 75px;
+            margin-left: 55px;
+            transform: rotate(71deg);
+        }
+
+        #branch2 {
+            margin-top: 20px;
+            margin-left: 181px;
+            transform: rotate(64deg);
+        }
+
+        #branch3 {
+            margin-top: 64px;
+            margin-left: 181px;
+            transform: rotate(101deg);
+        }
+
+        #branch4 {
+            width: 8px;
+            height: 150px;
+            margin-top: 39px;
+            margin-left: 316px;
+            transform: rotate(64deg);
+        }
+
+        .cherry-blossom {
+            height: 12px;
+            width: 12px;
+            background-color: #ffc9d3;
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        #cherry1 {
+            margin-left: 37px;
+            margin-top: 133px;
+            color: #ffffff;
+            box-shadow: 0px 0px 0px 4px #ffe6ea, 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+        }
+
+        #cherry2 {
+            margin-left: 33px;
+            margin-top: 33px;
+            color: #ffffff;
+            box-shadow: 0px 0px 0px 4px #ffe6ea, 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+        }
+
+        #cherry3 {
+            margin-left: 98px;
+            margin-top: 105px;
+            color: #ff9db1;
+            box-shadow: 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+        }
+
+        #cherry4 {
+            margin-left: 68px;
+            margin-top: 145px;
+            color: #ff9db1;
+            box-shadow: 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+        }
+
+        #cherry5 {
+            margin-left: 168px;
+            margin-top: 105px;
+            color: #ffffff;
+            box-shadow: 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+        }
+
+        /* Leaves */
+        .leaf {
+            height: 100px;
+            width: 100px;
+            background-color: #add46e;
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.8;
+        }
+
+        #darkgreenleaf {
+            height: 60px;
+            width: 60px;
+            right: 5%;
+            bottom: 15%;
+            background-color: #64a24a;
+        }
+
+        #leaf1 {
+            height: 125px;
+            width: 125px;
+            left: 8%;
+            bottom: 12%;
+            background-color: #74b559;
+        }
+
+        #leaf2 {
+            height: 85px;
+            width: 85px;
+            left: 15%;
+            bottom: 25%;
+        }
+
+        #leaf3 {
+            background-color: #74b559;
+            right: 10%;
+            bottom: 10%;
+        }
+
+        #lightgreenleaf {
+            height: 120px;
+            width: 120px;
+            right: 8%;
+            top: 80px;
+            background-color: #5ab586;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(247, 254, 255, 0.6);
+            pointer-events: none;
+            animation: ripple-animation 2s ease-out forwards;
+        }
+
+        @keyframes ripple-animation {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                border-width: 3px;
+            }
+            50% {
+                opacity: 0.6;
+                border-width: 2px;
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        /* Make leaves clickable */
+        .leaf {
+            cursor: pointer;
+            pointer-events: auto;
+            transition: transform 0.2s ease;
+        }
+
+        .leaf:hover {
+            transform: scale(1.05);
+        }
+
+        .leaf:active {
+            transform: scale(0.98);
+        }
+
+        /* Cherry blossom petals */
+        .petal {
+            position: absolute;
+            pointer-events: none;
+            width: 12px;
+            height: 12px;
+            animation: fall linear infinite;
+        }
+
+        .petal-part {
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ffb3c1;
+        }
+
+        .petal-part:nth-child(2n) {
+            background-color: #ffc9d9;
+        }
+
+        .petal-center {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #ffd700;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(120vh) translateX(var(--drift)) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Koi fish */
+        .koi {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: swim linear infinite;
+        }
+
+        @keyframes swim {
+            0% {
+                left: -10%;
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-30px);
+            }
+            50% {
+                transform: translateY(0);
+            }
+            75% {
+                transform: translateY(30px);
+            }
+            100% {
+                left: 110%;
+                transform: translateY(0);
+            }
+        }
+
+        /* Center content */
+        .center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Lily pad in center */
+        .lily-pad {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 48px;
+            cursor: pointer;
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .lily-pad:active {
+            transform: scale(0.95);
+        }
+
+        .lily-pad svg {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Rotate lotus flower on hover */
+        .lily-pad:hover #lotusFlower {
+            animation: rotateFlower 2s linear infinite;
+        }
+
+        @keyframes rotateFlower {
+            from {
+                transform: translate(50px, 50px) scale(1.5) rotate(0deg);
+            }
+            to {
+                transform: translate(50px, 50px) scale(1.5) rotate(360deg);
+            }
+        }
+
+        .quote {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+            max-width: 600px;
+            padding: 0 32px;
+            opacity: 0.9;
+        }
+
+        .attribution {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 64px;
+        }
+
+        .breathing-text {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 26px;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transition: all 1s ease-in-out;
+            margin-bottom: 32px;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.25);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .dot.active {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            bottom: 64px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            transition: opacity 2s ease-in-out;
+            pointer-events: none;
+        }
+
+        .instructions p {
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .instructions .sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.75);
+            margin-top: 8px;
+        }
+
+        .instructions.hidden {
+            opacity: 0;
+        }
+
+        /* Ambient overlay */
+        .ambient-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Quote container */
+        .quote-container {
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .quote-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Breathing container */
+        .breathing-container {
+            transition: opacity 0.5s ease-in-out;
+            margin-top: -112px;
+        }
+
+        .breathing-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Leaves scattered around -->
+    <div class="leaf" id="leaf1"></div>
+    <div class="leaf" id="leaf2"></div>
+    <div class="leaf" id="leaf3"></div>
+    <div class="leaf" id="darkgreenleaf"></div>
+    <div class="leaf" id="lightgreenleaf"></div>
+
+    <!-- Cherry blossom branch -->
+    <div class="branch-container">
+        <!-- Branch 1 -->
+        <div class="branch" id="branch1"></div>
+        <div class="cherry-blossom" id="cherry1"></div>
+        
+        <!-- Branch 2 -->
+        <div class="branch" id="branch2"></div>
+        <div class="cherry-blossom" id="cherry2"></div>
+        
+        <!-- Branch 3 -->
+        <div class="branch" id="branch3"></div>
+        <div class="cherry-blossom" id="cherry3"></div>
+        <div class="cherry-blossom" id="cherry4"></div>
+        
+        <!-- Branch 4 -->
+        <div class="branch" id="branch4"></div>
+        <div class="cherry-blossom" id="cherry5"></div>
+    </div>
+
+    <!-- Falling petals container -->
+    <div id="petals-container"></div>
+
+    <!-- Koi fish container -->
+    <div id="koi-container"></div>
+
+    <!-- Center content -->
+    <div class="center-content">
+        <!-- Lily pad object -->
+        <div class="lily-pad" id="lilyPad">
+            <svg width="120" height="120" viewBox="0 0 100 100">
+                <!-- Lily pad leaf -->
+                <ellipse cx="50" cy="50" rx="45" ry="40" fill="#6B8E23" opacity="0.85"/>
+                <ellipse cx="50" cy="50" rx="40" ry="35" fill="#7BA428" opacity="0.9"/>
+                <!-- Lotus flower on top -->
+                <g transform="translate(50, 50) scale(1.5)" id="lotusFlower">
+                    <!-- Petals -->
+                    <ellipse cx="0" cy="-8" rx="6" ry="10" fill="#FFB6C1" opacity="0.95" transform="rotate(0)"/>
+                    <ellipse cx="0" cy="-8" rx="6" ry="10" fill="#FFC0CB" opacity="0.95" transform="rotate(72)"/>
+                    <ellipse cx="0" cy="-8" rx="6" ry="10" fill="#FFB6C1" opacity="0.95" transform="rotate(144)"/>
+                    <ellipse cx="0" cy="-8" rx="6" ry="10" fill="#FFC0CB" opacity="0.95" transform="rotate(216)"/>
+                    <ellipse cx="0" cy="-8" rx="6" ry="10" fill="#FFB6C1" opacity="0.95" transform="rotate(288)"/>
+                    <!-- Center -->
+                    <circle cx="0" cy="0" r="4" fill="#FFD700" opacity="0.9"/>
+                    <circle cx="0" cy="0" r="2" fill="#FFA500" opacity="0.8"/>
+                </g>
+            </svg>
+        </div>
+        
+        <!-- Quote section -->
+        <div class="quote-container" id="quoteContainer">
+            <div class="quote" id="quoteText">
+                When you realize nothing is lacking, the whole world belongs to you
+            </div>
+            
+            <div class="attribution" id="attribution">
+                - Lao Tzu
+            </div>
+        </div>
+        
+        <!-- Breathing section (initially hidden) -->
+        <div class="breathing-container hidden" id="breathingContainer">
+            <div class="breathing-text" id="breathingText">Breathe In</div>
+            
+            <div class="progress-dots">
+                <div class="dot" id="dot0"></div>
+                <div class="dot" id="dot1"></div>
+                <div class="dot" id="dot2"></div>
+                <div class="dot" id="dot3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions" id="instructions">
+        <p>Let your thoughts drift like cherry blossoms on water</p>
+        <p class="sub">Follow your breath • Be present • Find stillness</p>
+    </div>
+
+    <!-- Ambient overlay -->
+    <div class="ambient-overlay" id="ambientOverlay"></div>
+
+    <script>
+        // Breathing cycle management
+        const phases = [
+            { name: 'Breathe In', duration: 4000 },
+            { name: 'Hold', duration: 4000 },
+            { name: 'Breathe Out', duration: 6000 },
+            { name: 'Hold', duration: 2000 }
+        ];
+
+        let currentPhaseIndex = 0;
+        let phaseStartTime = Date.now();
+        let currentPhase = phases[0];
+
+        const breathingText = document.getElementById('breathingText');
+        const ambientOverlay = document.getElementById('ambientOverlay');
+        const dots = [
+            document.getElementById('dot0'),
+            document.getElementById('dot1'),
+            document.getElementById('dot2'),
+            document.getElementById('dot3')
+        ];
+
+        // Array of inspirational quotes
+        const quotes = [
+            { text: "When you realize nothing is lacking, the whole world belongs to you", author: "Lao Tzu" },
+            { text: "Be still like a mountain and flow like a great river", author: "Lao Tzu" },
+            { text: "Nature does not hurry, yet everything is accomplished", author: "Lao Tzu" },
+            { text: "The quieter you become, the more you can hear", author: "Ram Dass" },
+            { text: "In the midst of movement and chaos, keep stillness inside of you", author: "Deepak Chopra" },
+            { text: "Peace comes from within. Do not seek it without", author: "Buddha" },
+            { text: "The present moment is filled with joy and happiness. If you are attentive, you will see it", author: "Thich Nhat Hanh" },
+            { text: "Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor", author: "Thich Nhat Hanh" },
+            { text: "Let go of what has passed. Let go of what may come. Let go of what is happening now", author: "Rumi" },
+            { text: "The soul always knows what to do to heal itself. The challenge is to silence the mind", author: "Caroline Myss" }
+        ];
+
+        let currentQuoteIndex = 0;
+
+        // Lily pad click handler - moved below breathwork toggle
+        const lilyPad = document.getElementById('lilyPad');
+        const quoteText = document.getElementById('quoteText');
+        const attribution = document.getElementById('attribution');
+
+        // Add transition to quote elements
+        quoteText.style.transition = 'opacity 0.3s ease-in-out';
+        attribution.style.transition = 'opacity 0.3s ease-in-out';
+
+        function updateBreathing() {
+            const elapsed = Date.now() - phaseStartTime;
+            const progress = Math.min(elapsed / currentPhase.duration, 1);
+
+            // Update ambient overlay
+            ambientOverlay.style.opacity = 0.5 + progress * 0.2;
+
+            // Update breathing text scale
+            const textScale = 1 + progress * 0.08;
+            breathingText.style.transform = `scale(${textScale})`;
+
+            // Update progress dots
+            const activeDot = Math.floor(progress * 4);
+            dots.forEach((dot, index) => {
+                if (index === activeDot) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            // Move to next phase
+            if (progress >= 1) {
+                currentPhaseIndex = (currentPhaseIndex + 1) % phases.length;
+                currentPhase = phases[currentPhaseIndex];
+                breathingText.textContent = currentPhase.name;
+                phaseStartTime = Date.now();
+            }
+
+            requestAnimationFrame(updateBreathing);
+        }
+
+        updateBreathing();
+
+        // Lotus flower toggle for breathwork mode
+        const quoteContainer = document.getElementById('quoteContainer');
+        const breathingContainer = document.getElementById('breathingContainer');
+        let breathworkActive = false;
+
+        lilyPad.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent body ripple
+            
+            breathworkActive = !breathworkActive;
+            
+            // Get only the lotus flower petals (inside the g tag with id)
+            const svg = lilyPad.querySelector('svg');
+            const lotusGroup = svg.querySelector('#lotusFlower');
+            const lotusPetals = lotusGroup.querySelectorAll('ellipse');
+            
+            if (breathworkActive) {
+                // Switch to breathwork mode - turn petals yellow (keep leaves green)
+                quoteContainer.classList.add('hidden');
+                breathingContainer.classList.remove('hidden');
+                
+                // Change only lotus petals to yellow
+                lotusPetals.forEach((petal, i) => {
+                    petal.setAttribute('fill', i % 2 === 0 ? '#FFD700' : '#FFC700');
+                });
+            } else {
+                // Switch back to quote mode - turn petals pink (keep leaves green)
+                quoteContainer.classList.remove('hidden');
+                breathingContainer.classList.add('hidden');
+                
+                // Change lotus petals back to pink
+                lotusPetals.forEach((petal, i) => {
+                    petal.setAttribute('fill', i % 2 === 0 ? '#FFB6C1' : '#FFC0CB');
+                });
+            }
+        });
+
+        // Hide instructions after 10 seconds
+        setTimeout(() => {
+            document.getElementById('instructions').classList.add('hidden');
+        }, 10000);
+
+        // Animate floating circles
+        function animateCircles() {
+            const circles = document.querySelectorAll('.floating-circle');
+            const startTime = Date.now();
+
+            function animate() {
+                const t = (Date.now() - startTime) * 0.0003;
+
+                circles.forEach((circle, index) => {
+                    const baseLeft = parseFloat(circle.style.left || getComputedStyle(circle).left);
+                    const baseTop = parseFloat(circle.style.top || getComputedStyle(circle).top);
+                    
+                    const offsetX = Math.sin(t + index) * 5;
+                    const offsetY = Math.cos(t * 0.7 + index) * 3;
+
+                    // Extract just the number from the style
+                    const leftMatch = circle.className.match(/circle-(\d+)/);
+                    const circleNum = leftMatch ? parseInt(leftMatch[1]) : 1;
+                    
+                    let initialLeft, initialTop;
+                    if (circleNum === 1) {
+                        initialLeft = 80;
+                        initialTop = 8;
+                    } else if (circleNum === 2) {
+                        initialLeft = 8;
+                        initialTop = 60;
+                    } else {
+                        initialLeft = 85;
+                        initialTop = 75;
+                    }
+
+                    circle.style.left = (initialLeft + offsetX) + '%';
+                    circle.style.top = (initialTop + offsetY) + '%';
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        animateCircles();
+
+        // Create falling cherry blossoms - only when clicked
+        function createPetal(startX, startY) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            
+            // Start from the clicked flower position
+            petal.style.left = startX + 'px';
+            petal.style.top = startY + 'px';
+            
+            const drift = (Math.random() - 0.5) * 100;
+            petal.style.setProperty('--drift', drift + 'px');
+            petal.style.animationDuration = (12 + Math.random() * 6) + 's';
+
+            // Create 5 petals in flower pattern
+            for (let i = 0; i < 5; i++) {
+                const petalPart = document.createElement('div');
+                petalPart.className = 'petal-part';
+                petalPart.style.transform = `rotate(${i * 72}deg) translateY(-4px)`;
+                petalPart.style.transformOrigin = 'center bottom';
+                petal.appendChild(petalPart);
+            }
+
+            // Add center
+            const center = document.createElement('div');
+            center.className = 'petal-center';
+            petal.appendChild(center);
+
+            document.getElementById('petals-container').appendChild(petal);
+
+            // Remove after animation
+            setTimeout(() => {
+                petal.remove();
+            }, 18000);
+        }
+
+        // Make branch flowers clickable
+        const branchFlowers = document.querySelectorAll('.cherry-blossom');
+        branchFlowers.forEach(flower => {
+            flower.style.cursor = 'pointer';
+            flower.style.pointerEvents = 'auto';
+            
+            flower.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent body ripple
+                
+                // Get flower position
+                const rect = flower.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                // Create a falling petal from this position
+                createPetal(centerX, centerY);
+                
+                // Add a slight shake to the flower
+                flower.style.animation = 'shake 0.3s ease';
+                setTimeout(() => {
+                    flower.style.animation = '';
+                }, 300);
+            });
+        });
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(-5deg); }
+                75% { transform: rotate(5deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Create koi fish
+        function createKoi(delay = 0) {
+            setTimeout(() => {
+                const koi = document.createElement('div');
+                koi.className = 'koi';
+                koi.style.top = '50%';
+                koi.style.animationDuration = '25s';
+                
+                koi.innerHTML = `
+                    <svg width="40" height="20" viewBox="0 0 40 20">
+                        <ellipse cx="20" cy="10" rx="18" ry="8" fill="#ff6b6b" opacity="0.9" />
+                        <ellipse cx="25" cy="10" rx="12" ry="6" fill="#ff8787" opacity="0.8" />
+                        <path d="M 5 10 Q 0 5, 0 10 Q 0 15, 5 10 Z" fill="#ff6b6b" opacity="0.8" />
+                        <circle cx="28" cy="8" r="1.5" fill="#333" />
+                        <circle cx="32" cy="10" r="2" fill="#ffd700" opacity="0.7" />
+                    </svg>
+                `;
+
+                document.getElementById('koi-container').appendChild(koi);
+
+                setTimeout(() => {
+                    koi.remove();
+                    createKoi(0); // Create another one
+                }, 25000);
+            }, delay);
+        }
+
+        createKoi(0);
+        createKoi(12000);
+
+        // Ripple effect on any click
+        document.body.addEventListener('click', (e) => {
+            // Create ripple at click position
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            ripple.style.transform = 'translate(-50%, -50%)';
+            
+            document.body.appendChild(ripple);
+            
+            // Remove ripple after animation completes
+            setTimeout(() => {
+                ripple.remove();
+            }, 2000);
+
+            // Change quote if in quote mode
+            if (!breathworkActive) {
+                // Move to next quote
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                const newQuote = quotes[currentQuoteIndex];
+                
+                // Fade out
+                quoteText.style.opacity = '0';
+                attribution.style.opacity = '0';
+                
+                // Change text and fade in
+                setTimeout(() => {
+                    quoteText.textContent = newQuote.text;
+                    attribution.textContent = `- ${newQuote.author}`;
+                    quoteText.style.opacity = '0.9';
+                    attribution.style.opacity = '1';
+                }, 300);
+            }
+        });
+
+        // Leaf movement when clicked
+        const leaves = document.querySelectorAll('.leaf');
+        
+        leaves.forEach(leaf => {
+            leaf.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent body click from also firing
+                
+                // Get current position
+                const rect = leaf.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                // Calculate direction away from click
+                const clickX = e.clientX;
+                const clickY = e.clientY;
+                const deltaX = centerX - clickX;
+                const deltaY = centerY - clickY;
+                
+                // Normalize and scale the movement
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                const moveDistance = 30; // pixels to move
+                const moveX = (deltaX / distance) * moveDistance;
+                const moveY = (deltaY / distance) * moveDistance;
+                
+                // Get current transform or set to 0
+                const currentTransform = leaf.style.transform || 'translate(0px, 0px)';
+                const matches = currentTransform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                const currentX = matches ? parseFloat(matches[1]) : 0;
+                const currentY = matches ? parseFloat(matches[2]) : 0;
+                
+                // Apply new position
+                const newX = currentX + moveX;
+                const newY = currentY + moveY;
+                leaf.style.transform = `translate(${newX}px, ${newY}px)`;
+                
+                // Add a gentle bounce back effect after a delay
+                setTimeout(() => {
+                    leaf.style.transition = 'transform 1s ease-out';
+                    leaf.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                    
+                    // Reset transition after animation
+                    setTimeout(() => {
+                        leaf.style.transition = 'transform 0.2s ease';
+                    }, 1000);
+                }, 100);
+                
+                // Create ripple at click position
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                ripple.style.left = clickX + 'px';
+                ripple.style.top = clickY + 'px';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                
+                document.body.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
