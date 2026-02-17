@@ -65,47 +65,43 @@
         }
 
         .cherry-blossom {
-            height: 12px;
-            width: 12px;
-            background-color: #ffc9d3;
-            border-radius: 50%;
             position: absolute;
             pointer-events: none;
+            width: 28px;
+            height: 28px;
+        }
+
+        .cherry-blossom svg {
+            transition: transform 0.6s ease;
+        }
+
+        .cherry-blossom:hover svg {
+            transform: rotate(40deg) !important;
         }
 
         #cherry1 {
-            margin-left: 37px;
-            margin-top: 133px;
-            color: #ffffff;
-            box-shadow: 0px 0px 0px 4px #ffe6ea, 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+            margin-left: 28px;
+            margin-top: 124px;
         }
 
         #cherry2 {
-            margin-left: 33px;
-            margin-top: 33px;
-            color: #ffffff;
-            box-shadow: 0px 0px 0px 4px #ffe6ea, 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+            margin-left: 24px;
+            margin-top: 24px;
         }
 
         #cherry3 {
-            margin-left: 98px;
-            margin-top: 105px;
-            color: #ff9db1;
-            box-shadow: 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+            margin-left: 89px;
+            margin-top: 96px;
         }
 
         #cherry4 {
-            margin-left: 68px;
-            margin-top: 145px;
-            color: #ff9db1;
-            box-shadow: 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+            margin-left: 59px;
+            margin-top: 136px;
         }
 
         #cherry5 {
-            margin-left: 168px;
-            margin-top: 105px;
-            color: #ffffff;
-            box-shadow: 1px -15px 2px 4px, 14px -4px 2px 3px, 9px 11px 2px 4px, -7px 13px 1px 4px, -15px -5px 2px 4px;
+            margin-left: 159px;
+            margin-top: 96px;
         }
 
         /* Leaves */
@@ -437,23 +433,11 @@
     <div class="leaf" id="lightgreenleaf"></div>
 
     <!-- Cherry blossom branch -->
-    <div class="branch-container">
-        <!-- Branch 1 -->
+    <div class="branch-container" id="branchContainer">
         <div class="branch" id="branch1"></div>
-        <div class="cherry-blossom" id="cherry1"></div>
-        
-        <!-- Branch 2 -->
         <div class="branch" id="branch2"></div>
-        <div class="cherry-blossom" id="cherry2"></div>
-        
-        <!-- Branch 3 -->
         <div class="branch" id="branch3"></div>
-        <div class="cherry-blossom" id="cherry3"></div>
-        <div class="cherry-blossom" id="cherry4"></div>
-        
-        <!-- Branch 4 -->
         <div class="branch" id="branch4"></div>
-        <div class="cherry-blossom" id="cherry5"></div>
     </div>
 
     <!-- Falling petals container -->
@@ -718,29 +702,84 @@
             }, 18000);
         }
 
-        // Make branch flowers clickable
-        const branchFlowers = document.querySelectorAll('.cherry-blossom');
-        branchFlowers.forEach(flower => {
-            flower.style.cursor = 'pointer';
-            flower.style.pointerEvents = 'auto';
-            
-            flower.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent body ripple
-                
-                // Get flower position
-                const rect = flower.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                
-                // Create a falling petal from this position
-                createPetal(centerX, centerY);
-                
-                // Add a slight shake to the flower
-                flower.style.animation = 'shake 0.3s ease';
-                setTimeout(() => {
-                    flower.style.animation = '';
-                }, 300);
-            });
+        // Generate 42 cherry blossoms distributed along branches
+        const pinkPalettes = [
+            ['#FFB6C1', '#FFC0CB'], ['#FF9EB5', '#FFB3C6'], ['#FFD1DC', '#FFE4E1'],
+            ['#FF85A1', '#FF99B0'], ['#FFC5D0', '#FFD5DF'], ['#FF6B8A', '#FF82A0'],
+            ['#FFAEC9', '#FFBCD4'], ['#FFA0B8', '#FFB2C8'], ['#FFE0E6', '#FFF0F5'],
+            ['#FF7096', '#FF87AA'], ['#FFCBD5', '#FFDCE4'], ['#FF5C80', '#FF7399'],
+            ['#FFD8E0', '#FFE8EE'], ['#FF9CB2', '#FFAFC3'], ['#FF4D70', '#FF6687'],
+            ['#FFBCC8', '#FFCDD7'], ['#FF8FA8', '#FFA2BE'], ['#FF3D60', '#FF5578'],
+            ['#FFE5EA', '#FFF2F5'], ['#FF7B9C', '#FF90B0'], ['#FF2B50', '#FF4466']
+        ];
+
+        const Y_OFFSET = 80;
+
+        const branches = [
+            { ox: 55,  oy: 75,  angle: 71,  length: 138, count: 8 },
+            { ox: 181, oy: 20,  angle: 64,  length: 138, count: 7 },
+            { ox: 181, oy: 64,  angle: 101, length: 138, count: 8 },
+            { ox: 316, oy: 39,  angle: 64,  length: 150, count: 7 },
+        ];
+
+        const branchContainer = document.getElementById('branchContainer');
+        let blossomIndex = 0;
+
+        branches.forEach((branch) => {
+            const rad = (branch.angle - 90) * Math.PI / 180;
+            const dx = Math.cos(rad);
+            const dy = Math.sin(rad);
+            const perpX = -dy;
+            const perpY = dx;
+
+            for (let i = 0; i < branch.count; i++) {
+                // Spread from 5% to 100% along the branch with more spacing
+                const t = 0.05 + (i / (branch.count - 1)) * 0.95;
+                const bx = branch.ox + dx * branch.length * t;
+                const by = branch.oy + dy * branch.length * t;
+
+                // Larger perpendicular jitter for more natural scatter
+                const jitter = (Math.random() - 0.5) * 70;
+                // Larger longitudinal nudge along the branch
+                const nudge = (Math.random() - 0.5) * 24;
+                const finalX = bx + perpX * jitter + dx * nudge - 14;
+                const finalY = by + perpY * jitter + dy * nudge - 14 + Y_OFFSET;
+
+                const [color1, color2] = pinkPalettes[blossomIndex % pinkPalettes.length];
+                const blossom = document.createElement('div');
+                blossom.className = 'cherry-blossom';
+                blossom.id = `cherry${blossomIndex + 1}`;
+                blossom.style.marginLeft = finalX + 'px';
+                blossom.style.marginTop = finalY + 'px';
+                blossom.style.cursor = 'pointer';
+                blossom.style.pointerEvents = 'auto';
+                // Slightly randomise the rotation of each flower
+                const rotate = Math.floor(Math.random() * 360);
+                blossom.innerHTML = `
+                    <svg width="28" height="28" viewBox="-14 -14 28 28" style="transform:rotate(${rotate}deg)">
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(0)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(72)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(144)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(216)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(288)"/>
+                        <circle cx="0" cy="0" r="3" fill="#FFD700" opacity="0.9"/>
+                        <circle cx="0" cy="0" r="1.5" fill="#FFA500" opacity="0.8"/>
+                    </svg>
+                `;
+
+                blossom.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const rect = blossom.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    createPetal(centerX, centerY);
+                    blossom.style.animation = 'shake 0.3s ease';
+                    setTimeout(() => { blossom.style.animation = ''; }, 300);
+                });
+
+                branchContainer.appendChild(blossom);
+                blossomIndex++;
+            }
         });
 
         // Add shake animation
