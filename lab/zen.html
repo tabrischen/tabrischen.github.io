@@ -33,35 +33,94 @@
 
         .branch {
             background-color: #986666e0;
-            width: 11px;
-            height: 138px;
             position: absolute;
+            animation: branchSway 8s ease-in-out infinite;
+            transform-origin: bottom left;
+        }
+
+        @keyframes branchSway {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(1deg);
+            }
+            50% {
+                transform: rotate(-0.5deg);
+            }
+            75% {
+                transform: rotate(1.5deg);
+            }
         }
 
         #branch1 {
-            margin-top: 75px;
-            margin-left: 55px;
-            transform: rotate(71deg);
+            width: 12px;
+            height: 160px;
+            margin-top: 160px;
+            margin-left: 45px;
+            transform: rotate(68deg);
+            background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
+            animation-delay: 0s;
         }
 
         #branch2 {
-            margin-top: 20px;
-            margin-left: 181px;
-            transform: rotate(64deg);
+            width: 10px;
+            height: 145px;
+            margin-top: 100px;
+            margin-left: 165px;
+            transform: rotate(58deg);
+            background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
+            animation-delay: 1s;
         }
 
         #branch3 {
-            margin-top: 64px;
-            margin-left: 181px;
-            transform: rotate(101deg);
+            width: 11px;
+            height: 155px;
+            margin-top: 145px;
+            margin-left: 170px;
+            transform: rotate(95deg);
+            background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
+            animation-delay: 0.5s;
         }
 
         #branch4 {
+            width: 9px;
+            height: 170px;
+            margin-top: 115px;
+            margin-left: 295px;
+            transform: rotate(62deg);
+            background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
+            animation-delay: 1.5s;
+        }
+
+        #branch5 {
             width: 8px;
-            height: 150px;
-            margin-top: 39px;
-            margin-left: 316px;
-            transform: rotate(64deg);
+            height: 130px;
+            margin-top: 145px;
+            margin-left: 300px;
+            transform: rotate(75deg);
+            background: linear-gradient(to bottom, #986666 0%, #78555580 100%);
+            animation-delay: 2s;
+        }
+
+        #branch6 {
+            width: 10px;
+            height: 120px;
+            margin-top: 100px;
+            margin-left: 380px;
+            transform: rotate(55deg);
+            background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
+            animation-delay: 0.8s;
+        }
+
+        #branch7 {
+            width: 7px;
+            height: 100px;
+            margin-top: 80px;
+            margin-left: 410px;
+            transform: rotate(48deg);
+            background: linear-gradient(to bottom, #986666 0%, #78555580 100%);
+            animation-delay: 1.2s;
         }
 
         .cherry-blossom {
@@ -77,6 +136,18 @@
 
         .cherry-blossom:hover svg {
             transform: rotate(40deg) !important;
+        }
+
+        /* Small leaves on branches */
+        .branch-leaf {
+            position: absolute;
+            pointer-events: none;
+            width: 18px;
+            height: 18px;
+        }
+
+        .branch-leaf svg {
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         }
 
         #cherry1 {
@@ -112,6 +183,20 @@
             border-radius: 50%;
             position: absolute;
             opacity: 0.8;
+            box-shadow: inset -5px -5px 15px rgba(0, 0, 0, 0.2), 
+                        inset 5px 5px 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .leaf::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
         }
 
         #darkgreenleaf {
@@ -120,6 +205,10 @@
             right: 5%;
             bottom: 15%;
             background-color: #64a24a;
+            background-image: 
+                linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.15) 50%, transparent 52%),
+                linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.1) 50%, transparent 52%),
+                linear-gradient(135deg, transparent 48%, rgba(255, 255, 255, 0.1) 50%, transparent 52%);
         }
 
         #leaf1 {
@@ -128,6 +217,11 @@
             left: 8%;
             bottom: 12%;
             background-color: #74b559;
+            background-image: 
+                radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.2) 0%, transparent 30%),
+                linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.15) 50%, transparent 52%),
+                linear-gradient(60deg, transparent 48%, rgba(255, 255, 255, 0.1) 50%, transparent 52%),
+                linear-gradient(120deg, transparent 48%, rgba(255, 255, 255, 0.1) 50%, transparent 52%);
         }
 
         #leaf2 {
@@ -135,12 +229,19 @@
             width: 85px;
             left: 15%;
             bottom: 25%;
+            background-image: 
+                linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.12) 50%, transparent 52%),
+                linear-gradient(30deg, transparent 48%, rgba(255, 255, 255, 0.08) 50%, transparent 52%);
         }
 
         #leaf3 {
             background-color: #74b559;
             right: 10%;
             bottom: 10%;
+            background-image:
+                radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.25) 0%, transparent 25%),
+                linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.15) 50%, transparent 52%),
+                linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.1) 50%, transparent 52%);
         }
 
         #lightgreenleaf {
@@ -149,6 +250,11 @@
             right: 8%;
             top: 80px;
             background-color: #5ab586;
+            background-image:
+                radial-gradient(circle at 25% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 35%),
+                linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.18) 50%, transparent 52%),
+                linear-gradient(40deg, transparent 48%, rgba(255, 255, 255, 0.12) 50%, transparent 52%),
+                linear-gradient(140deg, transparent 48%, rgba(255, 255, 255, 0.12) 50%, transparent 52%);
         }
 
         /* Ripple effect */
@@ -249,26 +355,35 @@
             position: absolute;
             pointer-events: none;
             opacity: 0.7;
-            animation: swim linear infinite;
         }
 
         @keyframes swim {
             0% {
-                left: -10%;
-                transform: translateY(0);
+                transform: translate(0vw, 0vh) rotate(0deg);
+            }
+            12.5% {
+                transform: translate(15vw, -8vh) rotate(5deg);
             }
             25% {
-                transform: translateY(-30px);
+                transform: translate(35vw, -12vh) rotate(10deg);
+            }
+            37.5% {
+                transform: translate(55vw, -8vh) rotate(5deg);
             }
             50% {
-                transform: translateY(0);
+                transform: translate(70vw, 0vh) rotate(0deg);
+            }
+            62.5% {
+                transform: translate(80vw, 8vh) rotate(-5deg);
             }
             75% {
-                transform: translateY(30px);
+                transform: translate(90vw, 12vh) rotate(-10deg);
+            }
+            87.5% {
+                transform: translate(100vw, 8vh) rotate(-5deg);
             }
             100% {
-                left: 110%;
-                transform: translateY(0);
+                transform: translate(110vw, 0vh) rotate(0deg);
             }
         }
 
@@ -438,6 +553,9 @@
         <div class="branch" id="branch2"></div>
         <div class="branch" id="branch3"></div>
         <div class="branch" id="branch4"></div>
+        <div class="branch" id="branch5"></div>
+        <div class="branch" id="branch6"></div>
+        <div class="branch" id="branch7"></div>
     </div>
 
     <!-- Falling petals container -->
@@ -716,10 +834,13 @@
         const Y_OFFSET = 80;
 
         const branches = [
-            { ox: 55,  oy: 75,  angle: 71,  length: 138, count: 8 },
-            { ox: 181, oy: 20,  angle: 64,  length: 138, count: 7 },
-            { ox: 181, oy: 64,  angle: 101, length: 138, count: 8 },
-            { ox: 316, oy: 39,  angle: 64,  length: 150, count: 7 },
+            { ox: 45,  oy: 160,  angle: 68,  length: 160, count: 12 },
+            { ox: 165, oy: 100,  angle: 58,  length: 145, count: 10 },
+            { ox: 170, oy: 145,  angle: 95,  length: 155, count: 11 },
+            { ox: 295, oy: 115,  angle: 62,  length: 170, count: 12 },
+            { ox: 300, oy: 145,  angle: 75,  length: 130, count: 9 },
+            { ox: 380, oy: 100,  angle: 55,  length: 120, count: 10 },
+            { ox: 410, oy: 80,   angle: 48,  length: 100, count: 8 },
         ];
 
         const branchContainer = document.getElementById('branchContainer');
@@ -732,53 +853,76 @@
             const perpX = -dy;
             const perpY = dx;
 
-            for (let i = 0; i < branch.count; i++) {
-                // Spread from 5% to 100% along the branch with more spacing
-                const t = 0.05 + (i / (branch.count - 1)) * 0.95;
+            // Calculate how many leaves to add (about 30% of blossom count)
+            const leafCount = Math.floor(branch.count * 0.3);
+            const totalItems = branch.count + leafCount;
+
+            for (let i = 0; i < totalItems; i++) {
+                // Spread from 5% to 100% along the branch
+                const t = 0.05 + (i / (totalItems - 1)) * 0.95;
                 const bx = branch.ox + dx * branch.length * t;
                 const by = branch.oy + dy * branch.length * t;
 
                 // Larger perpendicular jitter for more natural scatter
                 const jitter = (Math.random() - 0.5) * 70;
-                // Larger longitudinal nudge along the branch
+                // Larger longitudinal nudge
                 const nudge = (Math.random() - 0.5) * 24;
                 const finalX = bx + perpX * jitter + dx * nudge - 14;
                 const finalY = by + perpY * jitter + dy * nudge - 14 + Y_OFFSET;
 
-                const [color1, color2] = pinkPalettes[blossomIndex % pinkPalettes.length];
-                const blossom = document.createElement('div');
-                blossom.className = 'cherry-blossom';
-                blossom.id = `cherry${blossomIndex + 1}`;
-                blossom.style.marginLeft = finalX + 'px';
-                blossom.style.marginTop = finalY + 'px';
-                blossom.style.cursor = 'pointer';
-                blossom.style.pointerEvents = 'auto';
-                // Slightly randomise the rotation of each flower
-                const rotate = Math.floor(Math.random() * 360);
-                blossom.innerHTML = `
-                    <svg width="28" height="28" viewBox="-14 -14 28 28" style="transform:rotate(${rotate}deg)">
-                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(0)"/>
-                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(72)"/>
-                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(144)"/>
-                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(216)"/>
-                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(288)"/>
-                        <circle cx="0" cy="0" r="3" fill="#FFD700" opacity="0.9"/>
-                        <circle cx="0" cy="0" r="1.5" fill="#FFA500" opacity="0.8"/>
-                    </svg>
-                `;
+                // Randomly decide if this position gets a leaf or blossom
+                const isLeaf = Math.random() < 0.25; // 25% chance of leaf
 
-                blossom.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const rect = blossom.getBoundingClientRect();
-                    const centerX = rect.left + rect.width / 2;
-                    const centerY = rect.top + rect.height / 2;
-                    createPetal(centerX, centerY);
-                    blossom.style.animation = 'shake 0.3s ease';
-                    setTimeout(() => { blossom.style.animation = ''; }, 300);
-                });
+                if (isLeaf && leafCount > 0) {
+                    // Create a small green leaf
+                    const leaf = document.createElement('div');
+                    leaf.className = 'branch-leaf';
+                    leaf.style.marginLeft = (finalX + 5) + 'px';
+                    leaf.style.marginTop = (finalY + 5) + 'px';
+                    const leafRotate = Math.floor(Math.random() * 360);
+                    leaf.innerHTML = `
+                        <svg width="18" height="18" viewBox="-9 -9 18 18" style="transform:rotate(${leafRotate}deg)">
+                            <ellipse cx="0" cy="0" rx="7" ry="4" fill="#7BA428" opacity="0.85"/>
+                            <line x1="0" y1="-4" x2="0" y2="4" stroke="#6B8E23" stroke-width="1" opacity="0.6"/>
+                        </svg>
+                    `;
+                    branchContainer.appendChild(leaf);
+                } else {
+                    // Create a blossom
+                    const [color1, color2] = pinkPalettes[blossomIndex % pinkPalettes.length];
+                    const blossom = document.createElement('div');
+                    blossom.className = 'cherry-blossom';
+                    blossom.id = `cherry${blossomIndex + 1}`;
+                    blossom.style.marginLeft = finalX + 'px';
+                    blossom.style.marginTop = finalY + 'px';
+                    blossom.style.cursor = 'pointer';
+                    blossom.style.pointerEvents = 'auto';
+                    const rotate = Math.floor(Math.random() * 360);
+                    blossom.innerHTML = `
+                        <svg width="28" height="28" viewBox="-14 -14 28 28" style="transform:rotate(${rotate}deg)">
+                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(288)"/>
+                            <circle cx="0" cy="0" r="3" fill="#FFD700" opacity="0.9"/>
+                            <circle cx="0" cy="0" r="1.5" fill="#FFA500" opacity="0.8"/>
+                        </svg>
+                    `;
 
-                branchContainer.appendChild(blossom);
-                blossomIndex++;
+                    blossom.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const rect = blossom.getBoundingClientRect();
+                        const centerX = rect.left + rect.width / 2;
+                        const centerY = rect.top + rect.height / 2;
+                        createPetal(centerX, centerY);
+                        blossom.style.animation = 'shake 0.3s ease';
+                        setTimeout(() => { blossom.style.animation = ''; }, 300);
+                    });
+
+                    branchContainer.appendChild(blossom);
+                    blossomIndex++;
+                }
             }
         });
 
@@ -793,35 +937,73 @@
         `;
         document.head.appendChild(style);
 
-        // Create koi fish
-        function createKoi(delay = 0) {
+        // Create koi fish with varied colors and sizes
+        function createKoi(delay = 0, fishId = 0) {
             setTimeout(() => {
                 const koi = document.createElement('div');
                 koi.className = 'koi';
-                koi.style.top = '50%';
-                koi.style.animationDuration = '25s';
+                // More varied vertical position as starting point
+                const startY = 20 + Math.random() * 60; // 20% to 80% down the screen
+                koi.style.top = startY + '%';
+                koi.style.left = '-10%';
+                koi.style.animation = 'swim linear infinite';
+                // Randomize swim duration for varied speeds
+                const duration = 20 + Math.random() * 10; // 20-30 seconds
+                koi.style.animationDuration = duration + 's';
+                
+                // Define 3 different fish color schemes
+                const fishColors = [
+                    { body: '#FF8C42', overlay: '#FFB347', tail: '#FF8C42', spot: '#FFF' }, // Orange
+                    { body: '#E63946', overlay: '#FF6B7A', tail: '#E63946', spot: '#FFD700' }, // Red
+                    { body: '#F4F1DE', overlay: '#FFFEF7', tail: '#F4F1DE', spot: '#FF6B6B' }  // White/cream
+                ];
+                
+                // Define 3 different fish scales
+                const fishScales = [1.0, 0.75, 1.2]; // Normal, smaller, larger
+                
+                const colorScheme = fishColors[fishId % 3];
+                const scale = fishScales[fishId % 3];
+                const svgWidth = 60 * scale;
+                const svgHeight = 35 * scale;
                 
                 koi.innerHTML = `
-                    <svg width="40" height="20" viewBox="0 0 40 20">
-                        <ellipse cx="20" cy="10" rx="18" ry="8" fill="#ff6b6b" opacity="0.9" />
-                        <ellipse cx="25" cy="10" rx="12" ry="6" fill="#ff8787" opacity="0.8" />
-                        <path d="M 5 10 Q 0 5, 0 10 Q 0 15, 5 10 Z" fill="#ff6b6b" opacity="0.8" />
-                        <circle cx="28" cy="8" r="1.5" fill="#333" />
-                        <circle cx="32" cy="10" r="2" fill="#ffd700" opacity="0.7" />
+                    <svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 60 35">
+                        <!-- Body -->
+                        <ellipse cx="30" cy="17.5" rx="18" ry="8" fill="${colorScheme.body}" opacity="0.9" />
+                        <ellipse cx="35" cy="17.5" rx="12" ry="6" fill="${colorScheme.overlay}" opacity="0.85" />
+                        <!-- Larger tail with animation -->
+                        <g id="koiTail" style="transform-origin: 12px 17.5px">
+                            <path d="M 12 17.5 Q 0 5, 0 17.5 Q 0 30, 12 17.5 Z" fill="${colorScheme.tail}" opacity="0.85" />
+                        </g>
+                        <!-- Eye and spot -->
+                        <circle cx="38" cy="15" r="1.5" fill="#333" />
+                        <circle cx="42" cy="17.5" r="2.5" fill="${colorScheme.spot}" opacity="0.9" />
                     </svg>
                 `;
 
                 document.getElementById('koi-container').appendChild(koi);
 
+                // Animate the tail wiggle with varied frequency
+                const tail = koi.querySelector('#koiTail');
+                let wiggleTime = 0;
+                const wiggleSpeed = 0.12 + Math.random() * 0.08; // Varied wiggle speed
+                const wiggleAnimation = setInterval(() => {
+                    wiggleTime += wiggleSpeed;
+                    const wiggle = Math.sin(wiggleTime) * 8;
+                    tail.style.transform = `rotate(${wiggle}deg)`;
+                }, 50);
+
                 setTimeout(() => {
+                    clearInterval(wiggleAnimation);
                     koi.remove();
-                    createKoi(0); // Create another one
-                }, 25000);
+                    createKoi(0, fishId); // Create another one with same ID
+                }, duration * 1000);
             }, delay);
         }
 
-        createKoi(0);
-        createKoi(12000);
+        createKoi(0, 0);    // Orange fish, normal size
+        createKoi(8000, 1); // Red fish, smaller
+        createKoi(16000, 2); // White fish, larger
 
         // Ripple effect on any click
         document.body.addEventListener('click', (e) => {
