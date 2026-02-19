@@ -34,23 +34,6 @@
         .branch {
             background-color: #986666e0;
             position: absolute;
-            animation: branchSway 8s ease-in-out infinite;
-            transform-origin: bottom left;
-        }
-
-        @keyframes branchSway {
-            0%, 100% {
-                transform: rotate(0deg);
-            }
-            25% {
-                transform: rotate(1deg);
-            }
-            50% {
-                transform: rotate(-0.5deg);
-            }
-            75% {
-                transform: rotate(1.5deg);
-            }
         }
 
         #branch1 {
@@ -60,7 +43,6 @@
             margin-left: 45px;
             transform: rotate(68deg);
             background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
-            animation-delay: 0s;
         }
 
         #branch2 {
@@ -70,7 +52,6 @@
             margin-left: 165px;
             transform: rotate(58deg);
             background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
-            animation-delay: 1s;
         }
 
         #branch3 {
@@ -80,7 +61,6 @@
             margin-left: 170px;
             transform: rotate(95deg);
             background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
-            animation-delay: 0.5s;
         }
 
         #branch4 {
@@ -90,7 +70,6 @@
             margin-left: 295px;
             transform: rotate(62deg);
             background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
-            animation-delay: 1.5s;
         }
 
         #branch5 {
@@ -100,7 +79,6 @@
             margin-left: 300px;
             transform: rotate(75deg);
             background: linear-gradient(to bottom, #986666 0%, #78555580 100%);
-            animation-delay: 2s;
         }
 
         #branch6 {
@@ -110,7 +88,6 @@
             margin-left: 380px;
             transform: rotate(55deg);
             background: linear-gradient(to bottom, #a87777 0%, #986666 100%);
-            animation-delay: 0.8s;
         }
 
         #branch7 {
@@ -120,7 +97,6 @@
             margin-left: 410px;
             transform: rotate(48deg);
             background: linear-gradient(to bottom, #986666 0%, #78555580 100%);
-            animation-delay: 1.2s;
         }
 
         .cherry-blossom {
@@ -128,6 +104,7 @@
             pointer-events: none;
             width: 28px;
             height: 28px;
+            z-index: 2;
         }
 
         .cherry-blossom svg {
@@ -144,6 +121,7 @@
             pointer-events: none;
             width: 18px;
             height: 18px;
+            z-index: 1;
         }
 
         .branch-leaf svg {
@@ -853,28 +831,25 @@
             const perpX = -dy;
             const perpY = dx;
 
-            // Calculate how many leaves to add (about 30% of blossom count)
-            const leafCount = Math.floor(branch.count * 0.3);
+            // Calculate how many leaves to add (about 50% of blossom count)
+            const leafCount = Math.floor(branch.count * 0.5);
             const totalItems = branch.count + leafCount;
 
+            // First pass: add all leaves (they'll be behind)
             for (let i = 0; i < totalItems; i++) {
-                // Spread from 5% to 100% along the branch
                 const t = 0.05 + (i / (totalItems - 1)) * 0.95;
                 const bx = branch.ox + dx * branch.length * t;
                 const by = branch.oy + dy * branch.length * t;
 
-                // Larger perpendicular jitter for more natural scatter
                 const jitter = (Math.random() - 0.5) * 70;
-                // Larger longitudinal nudge
                 const nudge = (Math.random() - 0.5) * 24;
                 const finalX = bx + perpX * jitter + dx * nudge - 14;
                 const finalY = by + perpY * jitter + dy * nudge - 14 + Y_OFFSET;
 
-                // Randomly decide if this position gets a leaf or blossom
-                const isLeaf = Math.random() < 0.25; // 25% chance of leaf
+                // 50% chance of leaf at this position
+                const isLeaf = Math.random() < 0.5;
 
-                if (isLeaf && leafCount > 0) {
-                    // Create a small green leaf
+                if (isLeaf) {
                     const leaf = document.createElement('div');
                     leaf.className = 'branch-leaf';
                     leaf.style.marginLeft = (finalX + 5) + 'px';
@@ -887,42 +862,53 @@
                         </svg>
                     `;
                     branchContainer.appendChild(leaf);
-                } else {
-                    // Create a blossom
-                    const [color1, color2] = pinkPalettes[blossomIndex % pinkPalettes.length];
-                    const blossom = document.createElement('div');
-                    blossom.className = 'cherry-blossom';
-                    blossom.id = `cherry${blossomIndex + 1}`;
-                    blossom.style.marginLeft = finalX + 'px';
-                    blossom.style.marginTop = finalY + 'px';
-                    blossom.style.cursor = 'pointer';
-                    blossom.style.pointerEvents = 'auto';
-                    const rotate = Math.floor(Math.random() * 360);
-                    blossom.innerHTML = `
-                        <svg width="28" height="28" viewBox="-14 -14 28 28" style="transform:rotate(${rotate}deg)">
-                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(0)"/>
-                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(72)"/>
-                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(144)"/>
-                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(216)"/>
-                            <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(288)"/>
-                            <circle cx="0" cy="0" r="3" fill="#FFD700" opacity="0.9"/>
-                            <circle cx="0" cy="0" r="1.5" fill="#FFA500" opacity="0.8"/>
-                        </svg>
-                    `;
-
-                    blossom.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const rect = blossom.getBoundingClientRect();
-                        const centerX = rect.left + rect.width / 2;
-                        const centerY = rect.top + rect.height / 2;
-                        createPetal(centerX, centerY);
-                        blossom.style.animation = 'shake 0.3s ease';
-                        setTimeout(() => { blossom.style.animation = ''; }, 300);
-                    });
-
-                    branchContainer.appendChild(blossom);
-                    blossomIndex++;
                 }
+            }
+
+            // Second pass: add all blossoms (they'll be on top)
+            for (let i = 0; i < branch.count; i++) {
+                const t = 0.05 + (i / (branch.count - 1)) * 0.95;
+                const bx = branch.ox + dx * branch.length * t;
+                const by = branch.oy + dy * branch.length * t;
+
+                const jitter = (Math.random() - 0.5) * 70;
+                const nudge = (Math.random() - 0.5) * 24;
+                const finalX = bx + perpX * jitter + dx * nudge - 14;
+                const finalY = by + perpY * jitter + dy * nudge - 14 + Y_OFFSET;
+
+                const [color1, color2] = pinkPalettes[blossomIndex % pinkPalettes.length];
+                const blossom = document.createElement('div');
+                blossom.className = 'cherry-blossom';
+                blossom.id = `cherry${blossomIndex + 1}`;
+                blossom.style.marginLeft = finalX + 'px';
+                blossom.style.marginTop = finalY + 'px';
+                blossom.style.cursor = 'pointer';
+                blossom.style.pointerEvents = 'auto';
+                const rotate = Math.floor(Math.random() * 360);
+                blossom.innerHTML = `
+                    <svg width="28" height="28" viewBox="-14 -14 28 28" style="transform:rotate(${rotate}deg)">
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(0)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(72)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(144)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color2}" opacity="0.95" transform="rotate(216)"/>
+                        <ellipse cx="0" cy="-6" rx="4" ry="7" fill="${color1}" opacity="0.95" transform="rotate(288)"/>
+                        <circle cx="0" cy="0" r="3" fill="#FFD700" opacity="0.9"/>
+                        <circle cx="0" cy="0" r="1.5" fill="#FFA500" opacity="0.8"/>
+                    </svg>
+                `;
+
+                blossom.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const rect = blossom.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    createPetal(centerX, centerY);
+                    blossom.style.animation = 'shake 0.3s ease';
+                    setTimeout(() => { blossom.style.animation = ''; }, 300);
+                });
+
+                branchContainer.appendChild(blossom);
+                blossomIndex++;
             }
         });
 
