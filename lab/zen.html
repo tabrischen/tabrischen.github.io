@@ -671,8 +671,7 @@
         const phases = [
             { name: 'Breathe In', duration: 4000 },
             { name: 'Hold', duration: 4000 },
-            { name: 'Breathe Out', duration: 6000 },
-            { name: 'Hold', duration: 2000 }
+            { name: 'Breathe Out', duration: 6000 }
         ];
 
         let currentPhaseIndex = 0;
@@ -688,21 +687,61 @@
             document.getElementById('dot3')
         ];
 
-        // Array of inspirational quotes
-        const quotes = [
-            { text: "When you realize nothing is lacking, the whole world belongs to you", author: "Lao Tzu" },
-            { text: "Be still like a mountain and flow like a great river", author: "Lao Tzu" },
-            { text: "Nature does not hurry, yet everything is accomplished", author: "Lao Tzu" },
-            { text: "The quieter you become, the more you can hear", author: "Ram Dass" },
-            { text: "In the midst of movement and chaos, keep stillness inside of you", author: "Deepak Chopra" },
-            { text: "Peace comes from within. Do not seek it without", author: "Buddha" },
-            { text: "The present moment is filled with joy and happiness. If you are attentive, you will see it", author: "Thich Nhat Hanh" },
-            { text: "Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor", author: "Thich Nhat Hanh" },
-            { text: "Let go of what has passed. Let go of what may come. Let go of what is happening now", author: "Rumi" },
-            { text: "The soul always knows what to do to heal itself. The challenge is to silence the mind", author: "Caroline Myss" }
+        // Fetch quotes from zen.md file in same directory
+        let quotes = [
+            { text: "When you realize nothing is lacking, the whole world belongs to you", author: "Lao Tzu" }
         ];
-
         let currentQuoteIndex = 0;
+
+        // Fetch quotes from zen.md file
+        fetch('./zen.md')
+            .then(response => response.text())
+            .then(markdown => {
+                // Parse markdown to extract quotes
+                const lines = markdown.split('\n');
+                const parsedQuotes = [];
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    // Look for quote pattern: "Quote text" - Author
+                    const match = line.match(/^[""](.+?)[""] [-–—] (.+)$/);
+                    if (match) {
+                        parsedQuotes.push({
+                            text: match[1].trim(),
+                            author: match[2].trim()
+                        });
+                    }
+                    // Also try: Quote text — Author (without quotes)
+                    else if (line.match(/^[^-].+ [—–-] .+$/)) {
+                        const parts = line.split(/\s+[—–-]\s+/);
+                        if (parts.length === 2) {
+                            parsedQuotes.push({
+                                text: parts[0].trim(),
+                                author: parts[1].trim()
+                            });
+                        }
+                    }
+                }
+                
+                if (parsedQuotes.length > 0) {
+                    quotes = parsedQuotes;
+                    // Update initial quote
+                    quoteText.textContent = quotes[0].text;
+                    attribution.textContent = `- ${quotes[0].author}`;
+                }
+            })
+            .catch(error => {
+                console.log('Using default quotes');
+                // Fallback to default quotes if fetch fails
+                quotes = [
+                    { text: "When you realize nothing is lacking, the whole world belongs to you", author: "Lao Tzu" },
+                    { text: "Be still like a mountain and flow like a great river", author: "Lao Tzu" },
+                    { text: "Nature does not hurry, yet everything is accomplished", author: "Lao Tzu" },
+                    { text: "The quieter you become, the more you can hear", author: "Ram Dass" },
+                    { text: "In the midst of movement and chaos, keep stillness inside of you", author: "Deepak Chopra" },
+                    { text: "Peace comes from within. Do not seek it without", author: "Buddha" }
+                ];
+            });
 
         // Lily pad click handler - moved below breathwork toggle
         const lilyPad = document.getElementById('lilyPad');
